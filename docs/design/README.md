@@ -8,21 +8,21 @@ UX/UI design docs, wireframes, flows and visual assets live here.
 
 It holds light and dark **phone** mockups of: campaign page, donate, waiting for PIN, thank you + reshare, "published: share it", home feed, and create steps 2 and 4. It also has a colour and type sheet.
 
-**How to use it:** treat it as the *idea* of the look and the flows, not a pixel spec. Fundizo is a **responsive web app for phones and desktops**: design each screen mobile-first, then give it a real desktop layout (top navigation, multi-column where it helps, e.g. campaign story beside a sticky donate card). The mockups say "harambee"; the product is **Fundizo**.
+**How to use it:** treat it as the _idea_ of the look and the flows, not a pixel spec. Fundizo is a **responsive web app for phones and desktops**: design each screen mobile-first, then give it a real desktop layout (top navigation, multi-column where it helps, e.g. campaign story beside a sticky donate card). The mockups say "harambee"; the product is **Fundizo**.
 
 ## Visual direction: Copper & Ink
 
-| Role | Light | Dark |
-| --- | --- | --- |
-| Ground (page) | `#F6F3EE` | `#121110` |
-| Surface (cards, inputs) | `#FFFFFF` | `#1C1A17` |
-| Sunken (tracks, placeholders) | `#EEEAE3` | `#26231F` |
-| Line (borders) | `#E3DDD3` | `#35312B` |
-| Ink / Ink 2 / Ink 3 (text) | `#17150F` / `#57514A` / `#736C61` | `#F3EFE7` / `#BDB6A9` / `#9A9386` |
-| Copper (money actions) | `#B4532A` | `#E58B5D` |
-| On copper | `#FFFFFF` | `#1B0F08` |
-| Copper soft / Copper text | `#F7E7DD` / `#8F3F1D` | `#3B2519` / `#F2B08C` |
-| Verified / Verified soft | `#1D6A55` / `#E0EFE8` | `#66C4A4` / `#173129` |
+| Role                          | Light                             | Dark                              |
+| ----------------------------- | --------------------------------- | --------------------------------- |
+| Ground (page)                 | `#F6F3EE`                         | `#121110`                         |
+| Surface (cards, inputs)       | `#FFFFFF`                         | `#1C1A17`                         |
+| Sunken (tracks, placeholders) | `#EEEAE3`                         | `#26231F`                         |
+| Line (borders)                | `#E3DDD3`                         | `#35312B`                         |
+| Ink / Ink 2 / Ink 3 (text)    | `#17150F` / `#57514A` / `#736C61` | `#F3EFE7` / `#BDB6A9` / `#9A9386` |
+| Copper (money actions)        | `#B4532A`                         | `#E58B5D`                         |
+| On copper                     | `#FFFFFF`                         | `#1B0F08`                         |
+| Copper soft / Copper text     | `#F7E7DD` / `#8F3F1D`             | `#3B2519` / `#F2B08C`             |
+| Verified / Verified soft      | `#1D6A55` / `#E0EFE8`             | `#66C4A4` / `#173129`             |
 
 - **Type:** Bricolage Grotesque (600/700) for headings and amounts; Inter for everything else. Amounts use tabular figures.
 - **Buttons:** copper for the one money action on a screen (Donate, Pay); ink for moving through a flow (Continue); outline for secondary.

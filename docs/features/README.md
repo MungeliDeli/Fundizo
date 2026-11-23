@@ -12,6 +12,6 @@ Every feature we build gets a living doc here. It explains how the feature **act
 
 ## Index
 
-| Doc | Feature IDs | Status |
-| --- | --- | --- |
-| _none yet: the first arrives with slice 0 of the [MVP plan](../product/MVP-PLAN.md)_ | | |
+| Doc                               | Feature IDs                   | Status  |
+| --------------------------------- | ----------------------------- | ------- |
+| [F-01 Skeleton](F-01-skeleton.md) | F-01, F-02 (CI), F-04 (local) | Shipped |

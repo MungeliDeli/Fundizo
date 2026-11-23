@@ -32,7 +32,7 @@ The MVP is the **Phase 0 + Phase 1 "Must"** features from [FEATURES.md](features
 
 | # | Slice | Feature IDs | What you'll be able to see and do |
 | --- | --- | --- | --- |
-| 0 | **Skeleton** | F-01, F-02 (CI), F-04 (local config) | Monorepo with `apps/api` (NestJS), `apps/web` (Next.js), `packages/shared`; Postgres and Redis in Docker; migrations wired up; GitHub Actions runs checks. A responsive web shell (desktop top bar, mobile bottom bar) shows "API connected". |
+| 0 ✅ | **Skeleton** | F-01, F-02 (CI), F-04 (local config) | Monorepo with `apps/api` (NestJS), `apps/web` (Next.js), `packages/shared`; Postgres and Redis in Docker; migrations wired up; GitHub Actions runs checks. A responsive web shell (desktop top bar, mobile bottom bar) shows "API connected". |
 | 1 | **Sign up and log in with phone** | A-01, A-03, N-01 (dev SMS adapter) | Enter a phone number → get an OTP (shown in a dev-only "SMS outbox" until Brevo SMS credits are bought) → add your name → logged in. Log out, log in again, log out of other devices. |
 | 2 | **Profile** | A-02 | View and edit your name, district and language. (The photo comes with slice 4.) |
 | 3 | **Create and publish a campaign** | C-01, C-02, C-03, C-04, C-06, C-07 | The wizard (for me or someone else, category, goal, story) saves each step to the server; publish; the public campaign page renders on the server with link previews (O-02). Open the link logged out. |

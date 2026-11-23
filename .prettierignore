@@ -1,0 +1,9 @@
+pnpm-lock.yaml
+dist
+.next
+.turbo
+coverage
+apps/api/src/db/migrations
+docs/product
+*.xlsx
+*.csv

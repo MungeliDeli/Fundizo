@@ -19,20 +19,33 @@ This doc lists what you need installed to run Fundizo, and every important libra
 | AWS CLI                 | v2                                                | Access to staging and production (SSO, no static keys) | Spec                         |
 | GitHub CLI (`gh`)       | Current                                           | PRs and CI from the terminal                           | Proposed                     |
 
-### Running locally (filled in by slice 0)
+### Running locally
 
 ```bash
-corepack enable            # gives you the pinned pnpm
-pnpm install
-cp .env.example .env.local # placeholders only, never real secrets
-docker compose up -d       # postgres + redis
+corepack enable && pnpm install
+pnpm services:up   # Postgres + Redis
 pnpm db:migrate
-pnpm dev                   # api + web via turbo
+pnpm dev
 ```
+
+Optional overrides: copy `apps/api/.env.example` → `apps/api/.env` and `apps/web/.env.example` → `apps/web/.env.local`. Dev defaults already match docker-compose.
 
 ### Installed now
 
-_Nothing yet. Slice 0 records the exact versions here._
+Exact versions are in the `package.json` files and `pnpm-lock.yaml`. All were at least 14 days old when added.
+
+| Where             | Packages                                                                      | Why                                      |
+| ----------------- | ----------------------------------------------------------------------------- | ---------------------------------------- |
+| root              | `turbo` 2.11, `typescript` 6.0, `prettier` 3.9                                | Task runner, types, formatting           |
+| `packages/shared` | `zod` 4.6                                                                     | Contracts shared by API and web          |
+| `apps/api`        | `@nestjs/core`/`common`/`platform-express` 12.4, `reflect-metadata`, `rxjs`   | Framework (ESM only)                     |
+| `apps/api`        | `drizzle-orm` 0.45, `drizzle-kit` 0.31, `pg` 8.23                             | Database access and migrations           |
+| `apps/api`        | `ioredis` 6                                                                   | Redis client (BullMQ arrives in slice 5) |
+| `apps/api`        | `nestjs-pino` 5.3, `pino` 10, `pino-http` 11, `pino-pretty` (dev)             | Structured logs with redaction           |
+| `apps/api`        | `helmet` 8.3                                                                  | Security headers                         |
+| `apps/api`        | `@nestjs/cli` 12, `@nestjs/testing`, `supertest`, `vitest` 5.1, `oxlint` 1.92 | Build, tests, lint                       |
+| `apps/web`        | `next` 16.4, `react`/`react-dom` 19.3, `tailwindcss` 4.3                      | Web app and styling                      |
+| `apps/web`        | `vitest`, `jsdom`, `@testing-library/*`, `eslint` 9 + `eslint-config-next`    | Tests and lint                           |
 
 ### Version notes for slice 0
 
@@ -116,15 +129,15 @@ Payment and SMS providers are reached over plain HTTPS from our own adapters (`f
 
 ## 7. External services (accounts needed, not packages)
 
-| Service                               | Used for                                                     | Phase       |
-| ------------------------------------- | ------------------------------------------------------------ | ----------- |
-| ZynlePay (Zynle Fintech), sandbox     | MTN and Airtel collections and payouts via one aggregator ([ADR 0002](architecture/decisions/0002-mvp-providers-zynlepay-brevo-aws.md)) | 1 (sandbox) |
-| Brevo                                 | Transactional email (free plan); SMS for OTP and receipts (prepaid credits) | 1           |
-| MTN MoMo / Airtel Money direct APIs   | Later adapters, not MVP                                      | Later       |
-| Zambian USSD aggregator (TBD)         | USSD donate menu (D-14)                                      | 2           |
-| AWS (af-south-1)                      | ECS Fargate, RDS, ElastiCache, S3, Secrets Manager, KMS, WAF | 0           |
-| Sentry, Grafana Cloud                 | Errors, traces, dashboards, alerts                           | 0           |
-| GitHub Actions                        | CI/CD                                                        | 0           |
+| Service                             | Used for                                                                                                                                | Phase       |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| ZynlePay (Zynle Fintech), sandbox   | MTN and Airtel collections and payouts via one aggregator ([ADR 0002](architecture/decisions/0002-mvp-providers-zynlepay-brevo-aws.md)) | 1 (sandbox) |
+| Brevo                               | Transactional email (free plan); SMS for OTP and receipts (prepaid credits)                                                             | 1           |
+| MTN MoMo / Airtel Money direct APIs | Later adapters, not MVP                                                                                                                 | Later       |
+| Zambian USSD aggregator (TBD)       | USSD donate menu (D-14)                                                                                                                 | 2           |
+| AWS (af-south-1)                    | ECS Fargate, RDS, ElastiCache, S3, Secrets Manager, KMS, WAF                                                                            | 0           |
+| Sentry, Grafana Cloud               | Errors, traces, dashboards, alerts                                                                                                      | 0           |
+| GitHub Actions                      | CI/CD                                                                                                                                   | 0           |
 
 ## Rules for adding a dependency
 

@@ -1,8 +1,8 @@
 ID,Module,Feature,What it does,Phase,Priority,Users,Status
-F-01,Foundation,Monorepo,"pnpm + Turborepo with api, web, admin and shared packages",0,Must,Team,Not started
-F-02,Foundation,CI/CD pipeline,"GitHub Actions: lint, test, build, deploy to staging and production (set up with Claude Code)",0,Must,Team,Not started
+F-01,Foundation,Monorepo,"pnpm + Turborepo with api, web, admin and shared packages",0,Must,Team,Done
+F-02,Foundation,CI/CD pipeline,"GitHub Actions: lint, test, build, deploy to staging and production (set up with Claude Code)",0,Must,Team,In progress
 F-03,Foundation,AWS environments,"Staging and production in AWS Cape Town: ECS Fargate, RDS PostgreSQL, Redis, S3, NAT gateway with fixed outbound IP",0,Must,Team,Not started
-F-04,Foundation,Secrets and config,"AWS Secrets Manager; no keys in code, git or the frontend",0,Must,Team,Not started
+F-04,Foundation,Secrets and config,"AWS Secrets Manager; no keys in code, git or the frontend",0,Must,Team,In progress
 F-05,Foundation,Observability,"Error tracking, logs, traces; alerts on payment success rate, callbacks and float",0,Must,Team,Not started
 F-06,Foundation,Double-entry ledger,"Permanent ledger entries; every balance is calculated from them, never edited",0,Must,Team,Not started
 F-07,Foundation,MTN MoMo adapter (sandbox),Collections and disbursements built and tested against MTN's free sandbox,0,Must,Team,Not started

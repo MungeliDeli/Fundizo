@@ -10,10 +10,10 @@ Source of truth for what to build. IDs are stable: reference them in branches, c
 
 | ID | Feature | What it does | Priority | Users | Status |
 | --- | --- | --- | --- | --- | --- |
-| F-01 | Monorepo | pnpm + Turborepo with api, web, admin and shared packages | Must | Team | Not started |
-| F-02 | CI/CD pipeline | GitHub Actions: lint, test, build, deploy to staging and production (set up with Claude Code) | Must | Team | Not started |
+| F-01 | Monorepo | pnpm + Turborepo with api, web, admin and shared packages | Must | Team | Done |
+| F-02 | CI/CD pipeline | GitHub Actions: lint, test, build, deploy to staging and production (set up with Claude Code) | Must | Team | In progress |
 | F-03 | AWS environments | Staging and production in AWS Cape Town: ECS Fargate, RDS PostgreSQL, Redis, S3, NAT gateway with fixed outbound IP | Must | Team | Not started |
-| F-04 | Secrets and config | AWS Secrets Manager; no keys in code, git or the frontend | Must | Team | Not started |
+| F-04 | Secrets and config | AWS Secrets Manager; no keys in code, git or the frontend | Must | Team | In progress |
 | F-05 | Observability | Error tracking, logs, traces; alerts on payment success rate, callbacks and float | Must | Team | Not started |
 | F-06 | Double-entry ledger | Permanent ledger entries; every balance is calculated from them, never edited | Must | Team | Not started |
 | F-07 | MTN MoMo adapter (sandbox) | Collections and disbursements built and tested against MTN's free sandbox | Must | Team | Not started |

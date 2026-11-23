@@ -2,7 +2,17 @@
 
 A trusted, mobile-money-native fundraising platform for Zambia: hospital bills, funerals, school fees, weddings, church and community projects. Donors give with **MTN MoMo** and **Airtel Money**. Every kwacha is tracked in a double-entry ledger, and money only leaves once the people and the campaign behind it are verified.
 
-> **Status:** Phase 0 (Foundation): documentation only. We build one feature at a time, end to end, following the [MVP plan](docs/product/MVP-PLAN.md).
+> **Status:** Phase 0. Slice 0 (the skeleton) is done; we build one feature at a time, end to end, following the [MVP plan](docs/product/MVP-PLAN.md).
+
+## Quick start
+
+```bash
+corepack enable && pnpm install
+pnpm services:up   # Postgres + Redis (Docker)
+pnpm db:migrate
+pnpm dev           # web http://localhost:3000 · API http://localhost:4000
+pnpm check         # typecheck + lint + tests
+```
 
 ## Where to start
 
@@ -37,10 +47,14 @@ Fundizo/
 │   ├── security/             Threat model, controls, checklists
 │   ├── features/             One doc per feature as it's built (by feature ID)
 │   └── design/               UX/UI design docs and assets
-└── .github/                  PR template (CI workflows come with F-02)
+├── apps/api/                 NestJS API (modular monolith)
+├── apps/web/                 Next.js web app (phone + desktop)
+├── packages/shared/          Zod contracts shared by API and web
+├── docker-compose.yml        Local Postgres + Redis
+└── .github/                  CI workflow + PR template
 ```
 
-The code (`apps/api`, `apps/web`, `apps/admin`, `packages/shared`) arrives slice by slice, starting with slice 0 of the MVP plan. The planned layout is in [docs/architecture/README.md](docs/architecture/README.md#target-code-layout).
+`apps/admin` (staff console) arrives with slice 12. The full planned layout is in [docs/architecture/README.md](docs/architecture/README.md#target-code-layout).
 
 ## Contributing in one paragraph
 
