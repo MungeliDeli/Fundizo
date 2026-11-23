@@ -34,24 +34,23 @@ The MVP is the **Phase 0 + Phase 1 "Must"** features from [FEATURES.md](features
 | # | Slice | Feature IDs | What you'll be able to see and do |
 | --- | --- | --- | --- |
 | 0 | **Skeleton** | F-01, F-02 (CI), F-04 (local config) | Monorepo with `apps/api` (NestJS), `apps/web` (Next.js), `packages/shared`; Postgres and Redis in Docker; migrations wired up; GitHub Actions runs checks. A responsive web shell (desktop top bar, mobile bottom bar) shows "API connected". |
-| 1 | **Sign up and log in with phone** | A-01, A-03, N-01 (dev SMS adapter) | Enter a phone number → get an OTP (shown in a dev-only "SMS outbox" until an SMS provider is chosen) → add your name → logged in. Log out, log in again, log out of other devices. |
+| 1 | **Sign up and log in with phone** | A-01, A-03, N-01 (dev SMS adapter) | Enter a phone number → get an OTP (shown in a dev-only "SMS outbox" until Brevo SMS credits are bought) → add your name → logged in. Log out, log in again, log out of other devices. |
 | 2 | **Profile** | A-02 | View and edit your name, district and language. (The photo comes with slice 4.) |
 | 3 | **Create and publish a campaign** | C-01, C-02, C-03, C-04, C-06, C-07 | The wizard (for me or someone else, category, goal, story) saves each step to the server; publish; the public campaign page renders on the server with link previews (O-02). Open the link logged out. |
 | 4 | **Photos** | C-05 | Upload a cover and up to 10 photos (presigned uploads; MinIO locally, S3 later), compressed on the phone, EXIF stripped, shown on the page and in link previews. |
 | 5 | **Ledger and background jobs** | F-06, F-09 | Append-only double-entry ledger (enforced in the DB), transactional outbox, BullMQ worker. Visible as: campaign totals are now calculated from the ledger, plus a passing property-test report. |
 | 6 | **Donate (fake provider)** | D-01, D-02, D-03, D-05, D-08, D-09, D-10, U-04 | Guest donates: amount, tip, number, name/anonymous, message → waiting screen → a dev "approve / decline / time out" panel plays the network → ledger entries → live total and donor wall. Idempotent, with no double charge. |
 | 7 | **Staging on AWS** | F-03, F-04, F-05 | The app deployed to a real staging URL, with secrets in Secrets Manager and error tracking. From here every merged slice deploys. |
-| 8 | **MTN MoMo sandbox** | F-07, D-06 | Real Request-to-Pay against MTN's sandbox, with contract tests. *Needs MTN sandbox keys.* |
-| 9 | **Airtel Money sandbox** | F-08, D-07 | Same for Airtel. *Needs Airtel test access (apply early).* |
-| 10 | **SMS for real** | N-01, N-02, D-11 | A Zambian SMS aggregator behind the adapter; message templates; OTP and receipts by real SMS. *Needs a provider choice.* |
-| 11 | **Share** | O-01, O-02, O-03, O-04 | Share sheet, pre-written messages, reshare after donating. |
-| 12 | **Updates and thank-yous** | U-01, U-02, U-03 | Organiser posts updates; donors are notified; thank donors. |
-| 13 | **Staff accounts and admin console** | A-10, T-06, T-07 | Separate admin app with 2FA, roles, audit log, and a support lookup by phone or reference. |
-| 14 | **Verify people** | A-04, A-05, T-03 | NRC + selfie upload (encrypted KYC bucket), wallet-name match, staff review queue. |
-| 15 | **Verify campaigns** | V-01, V-02, V-03, V-04, V-05, V-06 | Unlock-withdrawals checklist, beneficiary SMS YES/NO, evidence, automatic checks, Verified badge, 30-day timeout. |
-| 16 | **Withdrawals** | A-06, P-01, P-02, P-03, P-04, P-05, T-04 | Payout wallets (OTP + 48 h cool-off), available balance, request, staff approval, disbursement (sandbox), tracking. |
-| 17 | **Money integrity** | P-06, P-08, P-09, D-12, T-08 | Public money trail, float per network, daily reconciliation (payouts pause on gaps), refunds, finance reports. |
-| 18 | **Trust and lifecycle** | T-01, T-02, C-09, C-10, A-07 | Report a campaign, moderation queue, funeral template, pause/end/close, account recovery after a SIM change. |
+| 8 | **ZynlePay sandbox (MTN + Airtel)** | D-06, D-07 (via aggregator, [ADR 0002](../architecture/decisions/0002-mvp-providers-zynlepay-brevo-aws.md)) | The fake provider is replaced by a real `ZynlePayProvider` against Zynle's sandbox for MTN and Airtel numbers, with contract tests. *Needs Zynle sandbox credentials and docs.* |
+| 9 | **Email and SMS via Brevo** | N-01, N-02, N-04, D-11 | Brevo email (free plan) for receipts and notifications; Brevo transactional SMS for OTP and receipts; central message templates. *Needs a Brevo account; SMS needs a small credit pack.* |
+| 10 | **Share** | O-01, O-02, O-03, O-04 | Share sheet, pre-written messages, reshare after donating. |
+| 11 | **Updates and thank-yous** | U-01, U-02, U-03 | Organiser posts updates; donors are notified; thank donors. |
+| 12 | **Staff accounts and admin console** | A-10, T-06, T-07 | Separate admin app with 2FA, roles, audit log, and a support lookup by phone or reference. |
+| 13 | **Verify people** | A-04, A-05, T-03 | NRC + selfie upload (encrypted KYC bucket), wallet-name match, staff review queue. |
+| 14 | **Verify campaigns** | V-01, V-02, V-03, V-04, V-05, V-06 | Unlock-withdrawals checklist, beneficiary SMS YES/NO, evidence, automatic checks, Verified badge, 30-day timeout. |
+| 15 | **Withdrawals** | A-06, P-01, P-02, P-03, P-04, P-05, T-04 | Payout wallets (OTP + 48 h cool-off), available balance, request, staff approval, disbursement via ZynlePay sandbox, tracking. |
+| 16 | **Money integrity** | P-06, P-08, P-09, D-12, T-08 | Public money trail, float per network, daily reconciliation (payouts pause on gaps), refunds, finance reports. |
+| 17 | **Trust and lifecycle** | T-01, T-02, C-09, C-10, A-07 | Report a campaign, moderation queue, funeral template, pause/end/close, account recovery after a SIM change. |
 
 Each row may split into smaller slices when we plan it. The order may change when the user decides.
 
@@ -63,7 +62,8 @@ Each row may split into smaller slices when we plan it. The order may change whe
 
 | Needed for | What |
 | --- | --- |
-| Slice 7 | An AWS account (af-south-1) and who owns billing |
-| Slice 8 | Sign up at momodeveloper.mtn.com and get sandbox keys |
-| Slice 9 | Contact Airtel Zambia business for test access (slow, so start now) |
-| Slice 10 | Choose a Zambian SMS/USSD aggregator |
+| Slice 7 | AWS access for af-south-1 (an IAM Identity Center/SSO user for deploys; no root keys) and a billing alert |
+| Slice 8 | A ZynlePay sandbox account: API docs, sandbox credentials, test phone numbers for MTN and Airtel, and how callbacks are authenticated |
+| Slice 9 | A Brevo account (free plan) with a verified sender domain for email, plus a small SMS credit pack when we want real SMS |
+
+Direct MTN MoMo and Airtel Money integrations (F-07, F-08) are **not** part of the MVP; they can be added later as extra adapters.

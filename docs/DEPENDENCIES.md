@@ -118,9 +118,10 @@ Payment and SMS providers are reached over plain HTTPS from our own adapters (`f
 
 | Service                               | Used for                                                     | Phase       |
 | ------------------------------------- | ------------------------------------------------------------ | ----------- |
-| MTN MoMo Developer (sandbox → live)   | Collections (Request to Pay) and Disbursements               | 0 (sandbox) |
-| Airtel Africa Developer (test → live) | USSD push collection and disbursement                        | 0 (sandbox) |
-| Zambian SMS/USSD aggregator (TBD)     | OTP, receipts, beneficiary confirmation, USSD menu           | 1           |
+| ZynlePay (Zynle Fintech), sandbox     | MTN and Airtel collections and payouts via one aggregator ([ADR 0002](architecture/decisions/0002-mvp-providers-zynlepay-brevo-aws.md)) | 1 (sandbox) |
+| Brevo                                 | Transactional email (free plan); SMS for OTP and receipts (prepaid credits) | 1           |
+| MTN MoMo / Airtel Money direct APIs   | Later adapters, not MVP                                      | Later       |
+| Zambian USSD aggregator (TBD)         | USSD donate menu (D-14)                                      | 2           |
 | AWS (af-south-1)                      | ECS Fargate, RDS, ElastiCache, S3, Secrets Manager, KMS, WAF | 0           |
 | Sentry, Grafana Cloud                 | Errors, traces, dashboards, alerts                           | 0           |
 | GitHub Actions                        | CI/CD                                                        | 0           |

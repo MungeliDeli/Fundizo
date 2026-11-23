@@ -54,7 +54,8 @@ Modular monolith in TypeScript (NestJS API, Next.js web and admin, shared packag
 
 - **Module boundaries are hard.** The modules are `identity`, `campaigns`, `payments`, `ledger`, `payouts`, `notifications`, `moderation` (plus audit), and `outreach`. A module exposes a public service interface and domain events. **Never import another module's internals, repositories or tables**; call its public interface or react to its events.
 - **Side effects go through the transactional outbox.** Write the domain change and its `outbox_events` row in the **same DB transaction**; BullMQ workers then handle SMS, status polling, receipts and analytics. Never send an SMS or call a provider inside a request transaction.
-- **External systems sit behind adapters:** `PaymentProvider` (MTN, Airtel; later Zamtel, cards, banks, or an aggregator), `Messaging` (SMS/USSD), storage, and later an AI gateway. Domain code never imports a vendor SDK directly.
+- **External systems sit behind adapters:** `PaymentProvider`, `Messaging` (SMS), `Mailer` (email), storage, and later an AI gateway. Domain code never imports a vendor SDK directly, and every adapter has a fake for tests and offline dev.
+- **MVP providers ([ADR 0002](docs/architecture/decisions/0002-mvp-providers-zynlepay-brevo-aws.md)):** mobile money through the **ZynlePay** aggregator (sandbox) for MTN and Airtel; **Brevo** for email (free plan) and SMS (prepaid credits); **AWS** for hosting. Direct MTN/Airtel APIs are later adapters, not MVP. Keep *provider* (ZYNLE) and *network* (MTN/AIRTEL) as separate fields.
 - **Campaign types are plug-ins.** Each type (standard, funeral, later event…) defines its rules and a Zod schema for `campaigns.type_config`. Adding a type must not need a schema migration.
 - **Shared contracts:** request/response types and Zod schemas live in `packages/shared`, and API, web and admin all validate with the same schemas.
 - **Public campaign pages are server-rendered** (link previews for WhatsApp and Facebook, fast first load on 3G).
@@ -113,5 +114,5 @@ _No code yet. Slice 0 of the MVP plan fills this in (install, dev, check, build,
 - Don't trust a payment callback without a status check.
 - Don't reach into another module's tables.
 - Don't commit secrets, real phone numbers, NRCs or production data. Use obviously fake fixtures.
-- Don't call live MTN or Airtel endpoints from dev or CI; use the sandboxes only.
+- Don't call live payment endpoints (ZynlePay live, MTN, Airtel) from dev or CI; sandbox only. Don't send real SMS from CI.
 - Don't build features from a later phase, or skip the feature doc.
