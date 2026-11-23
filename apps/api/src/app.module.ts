@@ -9,6 +9,7 @@ import { ENV, type Env } from './config/env.js';
 import { DatabaseModule } from './infra/database/database.module.js';
 import { MailModule } from './infra/mail/mail.module.js';
 import { RedisModule } from './infra/redis/redis.module.js';
+import { SmsModule } from './infra/sms/sms.module.js';
 import { DevModule } from './modules/dev/dev.module.js';
 import { HealthModule } from './modules/health/health.module.js';
 import { IdentityModule } from './modules/identity/identity.module.js';
@@ -53,6 +54,7 @@ const devModules = process.env.NODE_ENV === 'production' ? [] : [DevModule];
     DatabaseModule,
     RedisModule,
     MailModule,
+    SmsModule,
     HealthModule,
     IdentityModule,
     ...devModules,

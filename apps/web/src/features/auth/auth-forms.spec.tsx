@@ -22,6 +22,10 @@ const user = {
   emailVerified: true,
   hasPassword: true,
   googleLinked: false,
+  province: null,
+  district: null,
+  language: 'en' as const,
+  phone: null,
   createdAt: '2026-11-23T10:00:00.000Z',
 };
 

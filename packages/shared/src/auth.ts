@@ -77,6 +77,12 @@ export const PublicUser = z.object({
   hasPassword: z.boolean(),
   /** Signed in with Google before (A-12). */
   googleLinked: z.boolean(),
+  /** Profile (A-02). Only ever returned to the account owner. */
+  province: z.string().nullable(),
+  district: z.string().nullable(),
+  language: z.enum(['en', 'bem', 'nya', 'toi']),
+  /** E.164 phone, confirmed by SMS code (A-13). Null until confirmed. Owner only; never public. */
+  phone: z.string().nullable(),
   createdAt: z.iso.datetime(),
 });
 export type PublicUser = z.infer<typeof PublicUser>;

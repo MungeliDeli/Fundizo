@@ -7,6 +7,11 @@ import request from 'supertest';
 import type { App } from 'supertest/types.js';
 import { AppModule } from '../src/app.module.js';
 import { OUTBOX_KEY, type OutboxEntry, parseOutbox } from '../src/infra/mail/outbox.mailer.js';
+import {
+  SMS_OUTBOX_KEY,
+  type SmsOutboxEntry,
+  parseSmsOutbox,
+} from '../src/infra/sms/outbox.sms.js';
 
 export async function createTestApp(customise: (b: TestingModuleBuilder) => void = () => {}) {
   const builder = Test.createTestingModule({ imports: [AppModule] });
@@ -45,7 +50,19 @@ export async function lastEmailTo(email: string): Promise<OutboxEntry | undefine
   return (await outbox()).find((m) => m.to.email === email);
 }
 
-export function codeFrom(mail: OutboxEntry | undefined): string {
+/** Texts captured by the dev SMS outbox (newest first). */
+export async function smsOutbox(): Promise<SmsOutboxEntry[]> {
+  const redis = new Redis(process.env.REDIS_URL ?? '');
+  const raw = await redis.lrange(SMS_OUTBOX_KEY, 0, -1);
+  redis.disconnect();
+  return parseSmsOutbox(raw);
+}
+
+export async function lastSmsTo(phone: string): Promise<SmsOutboxEntry | undefined> {
+  return (await smsOutbox()).find((m) => m.to === phone);
+}
+
+export function codeFrom(mail: { text: string } | undefined): string {
   const code = mail?.text.match(/\b(\d{6})\b/)?.[1];
   if (!code) throw new Error('no code in email');
   return code;

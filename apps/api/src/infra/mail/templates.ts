@@ -73,6 +73,24 @@ export function passwordChangedMessage(to: To, firstName: string, resetLink: str
   };
 }
 
+export function phoneConfirmedMessage(
+  to: To,
+  firstName: string,
+  maskedPhone: string,
+  resetLink: string,
+): MailMessage {
+  return {
+    to,
+    tag: 'phone-confirmed',
+    subject: 'Your phone number was confirmed',
+    text: `Hi ${firstName},\n\nThe phone number ${maskedPhone} is now confirmed on your Fundizo account.\n\nIf this wasn't you, reset your password now: ${resetLink}`,
+    html: layout(`
+      <p>Hi ${esc(firstName)},</p>
+      <p>The phone number <strong>${esc(maskedPhone)}</strong> is now confirmed on your Fundizo account.</p>
+      <p>If this wasn't you, <a href="${esc(resetLink)}" style="color:#8F3F1D">reset your password now</a>.</p>`),
+  };
+}
+
 function layout(body: string): string {
   return `<!doctype html><html><body style="margin:0;background:#F6F3EE;padding:24px 12px;font-family:Inter,Arial,sans-serif;color:#17150F;font-size:15px;line-height:1.5">
 <table role="presentation" width="100%" style="max-width:520px;margin:0 auto;background:#FFFFFF;border:1px solid #E3DDD3;border-radius:16px">

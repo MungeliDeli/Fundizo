@@ -37,6 +37,18 @@ export const Errors = {
       'This link has expired or was already used. Ask for a new one.',
     ),
   unauthenticated: () => new AppError('unauthenticated', 401, 'Please log in.'),
+  phoneInUse: () =>
+    new AppError(
+      'phone_in_use',
+      409,
+      'That number is already confirmed on another Fundizo account.',
+    ),
+  smsFailed: () =>
+    new AppError(
+      'sms_failed',
+      503,
+      'We couldn’t send the text message just now. Please try again in a few minutes.',
+    ),
   rateLimited: (retryAfter: number) =>
     new AppError('rate_limited', 429, 'Too many tries. Please wait a moment and try again.', {
       retryAfter,

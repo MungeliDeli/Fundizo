@@ -27,7 +27,7 @@ Source of truth for what to build. IDs are stable: reference them in branches, c
 | ID | Feature | What it does | Priority | Users | Status |
 | --- | --- | --- | --- | --- | --- |
 | A-01 | Email sign-up and login | Name, email and password; email verified with a 6-digit code; log in, forgot/set password (ADR 0004) | Must | Everyone | Done |
-| A-02 | Profile | Name, photo, district and language | Must | Everyone | Not started |
+| A-02 | Profile | Name, photo, district and language | Must | Everyone | Done |
 | A-03 | Sessions | Secure server-side sessions; log out; log out of other devices (ADR 0004) | Must | Everyone | Done |
 | A-04 | ID verification | NRC or passport front and back plus a live selfie; unclear cases go to a review queue | Must | Organisers | Not started |
 | A-05 | Wallet name match | The registered MTN/Airtel wallet name must match the verified ID | Must | Organisers | Not started |
@@ -37,7 +37,7 @@ Source of truth for what to build. IDs are stable: reference them in branches, c
 | A-09 | Privacy controls | Download my data; delete my account (Data Protection Act) | Should | Everyone | Not started |
 | A-10 | Staff accounts | Admin, moderator, finance and support roles; 2FA required | Must | Staff | Not started |
 | A-12 | Sign in with Google | One-tap Google sign-in; links to an existing account with the same verified email | Must | Everyone | Done |
-| A-13 | Verify phone number | Add an MTN/Airtel number to the profile and verify it by SMS code; required before publishing | Must | Organisers | Not started |
+| A-13 | Verify phone number | Add an MTN/Airtel number to the profile and verify it by SMS code; required before publishing | Must | Organisers | Done |
 
 ### Campaigns
 

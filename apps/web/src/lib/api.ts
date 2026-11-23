@@ -32,9 +32,29 @@ export function apiPost<S extends z.ZodType>(
   schema: S,
   init?: Options,
 ) {
+  return send('POST', path, body, schema, init);
+}
+
+export function apiPatch<S extends z.ZodType>(
+  path: string,
+  body: unknown,
+  schema: S,
+  init?: Options,
+) {
+  return send('PATCH', path, body, schema, init);
+}
+
+/** State changes always carry JSON and the CSRF header (ADR 0004). */
+function send<S extends z.ZodType>(
+  method: 'POST' | 'PATCH',
+  path: string,
+  body: unknown,
+  schema: S,
+  init?: Options,
+) {
   return request(path, schema, {
     ...init,
-    method: 'POST',
+    method,
     body: JSON.stringify(body ?? {}),
     headers: { 'Content-Type': 'application/json', [CSRF_HEADER]: '1', ...init?.headers },
   });

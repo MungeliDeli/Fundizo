@@ -23,6 +23,10 @@ export class UserViewService {
       emailVerified: user.emailVerifiedAt !== null,
       hasPassword: user.passwordHash !== null,
       googleLinked: Boolean(google),
+      province: user.province,
+      district: user.district,
+      language: user.language,
+      phone: user.phoneVerifiedAt ? user.phoneE164 : null,
       createdAt: user.createdAt.toISOString(),
     };
   }

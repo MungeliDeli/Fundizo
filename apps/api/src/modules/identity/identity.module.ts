@@ -7,15 +7,18 @@ import { AuthGuard } from './auth.guard.js';
 import { AuthService } from './auth.service.js';
 import { GoogleAuthController } from './google-auth.controller.js';
 import { GoogleAuthService } from './google-auth.service.js';
+import { MeController } from './me.controller.js';
+import { ProfileService } from './profile.service.js';
 import { SessionsService } from './sessions.service.js';
 import { UserViewService } from './user-view.service.js';
 
 /** Identity: users, sessions, email and Google sign-in (ADR 0004). Other modules use AuthGuard only. */
 @Module({
-  controllers: [AuthController, GoogleAuthController],
+  controllers: [AuthController, GoogleAuthController, MeController],
   providers: [
     AuthService,
     GoogleAuthService,
+    ProfileService,
     SessionsService,
     UserViewService,
     AuthGuard,

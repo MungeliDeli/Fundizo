@@ -36,11 +36,24 @@ export const users = pgTable(
     status: text('status', { enum: ['active', 'disabled'] })
       .notNull()
       .default('active'),
+    /** Profile (A-02). */
+    province: text('province'),
+    district: text('district'),
+    language: text('language', { enum: ['en', 'bem', 'nya', 'toi'] })
+      .notNull()
+      .default('en'),
+    /** Confirmed mobile number in E.164 (A-13). Set only after the SMS code is entered. */
+    phoneE164: text('phone_e164'),
+    phoneVerifiedAt: timestamp('phone_verified_at', { withTimezone: true }),
     ...timestamps,
   },
   (t) => [
     uniqueIndex('users_email_key').on(sql`lower(${t.email})`),
+    // A number can be confirmed on only one account.
+    uniqueIndex('users_phone_e164_key').on(t.phoneE164),
     check('users_status_check', sql`${t.status} in ('active', 'disabled')`),
+    check('users_language_check', sql`${t.language} in ('en', 'bem', 'nya', 'toi')`),
+    check('users_phone_pair_check', sql`(${t.phoneE164} is null) = (${t.phoneVerifiedAt} is null)`),
   ],
 );
 
@@ -65,7 +78,7 @@ export const sessions = pgTable(
   ],
 );
 
-/** One-time secrets sent by email: 6-digit email codes and password-reset link tokens. */
+/** One-time secrets: 6-digit email and phone codes, and password-reset link tokens. */
 export const oneTimeTokens = pgTable(
   'one_time_tokens',
   {
@@ -73,7 +86,11 @@ export const oneTimeTokens = pgTable(
     userId: uuid('user_id')
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
-    purpose: text('purpose', { enum: ['verify_email', 'reset_password'] }).notNull(),
+    purpose: text('purpose', {
+      enum: ['verify_email', 'reset_password', 'verify_phone'],
+    }).notNull(),
+    /** For verify_phone: the E.164 number the code was sent to. */
+    target: text('target'),
     tokenHash: text('token_hash').notNull(),
     expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
     consumedAt: timestamp('consumed_at', { withTimezone: true }),
@@ -83,7 +100,10 @@ export const oneTimeTokens = pgTable(
   (t) => [
     index('one_time_tokens_user_purpose_idx').on(t.userId, t.purpose),
     index('one_time_tokens_token_hash_idx').on(t.tokenHash),
-    check('one_time_tokens_purpose_check', sql`${t.purpose} in ('verify_email', 'reset_password')`),
+    check(
+      'one_time_tokens_purpose_check',
+      sql`${t.purpose} in ('verify_email', 'reset_password', 'verify_phone')`,
+    ),
   ],
 );
 

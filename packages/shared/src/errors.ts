@@ -12,6 +12,8 @@ export const ErrorCode = z.enum([
   'invalid_token',
   'unauthenticated',
   'csrf_failed',
+  'phone_in_use',
+  'sms_failed',
   'not_found',
   'internal_error',
 ]);

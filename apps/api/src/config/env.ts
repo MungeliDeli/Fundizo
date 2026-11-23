@@ -43,6 +43,17 @@ const EnvSchema = z
     MAIL_FROM_EMAIL: z.email(),
     MAIL_FROM_NAME: z.string().min(1).default('Fundizo'),
 
+    /**
+     * SMS (A-13). 'outbox' (default) shows texts on /dev/outbox and costs nothing; 'brevo' sends real
+     * SMS with Brevo credits. Production must use 'brevo'.
+     */
+    SMS_TRANSPORT: z.enum(['outbox', 'brevo']).default('outbox'),
+    /** Alphanumeric sender name shown on phones: letters and digits only, up to 11 (Brevo rule). */
+    SMS_SENDER: z
+      .string()
+      .regex(/^[A-Za-z0-9]{1,11}$/)
+      .default('Fundizo'),
+
     /** Google sign-in (A-12). Both or neither; without them the "Continue with Google" button is hidden. */
     GOOGLE_CLIENT_ID: z.string().min(10).optional(),
     GOOGLE_CLIENT_SECRET: z.string().min(10).optional(),
@@ -50,6 +61,14 @@ const EnvSchema = z
   .refine((e) => Boolean(e.GOOGLE_CLIENT_ID) === Boolean(e.GOOGLE_CLIENT_SECRET), {
     path: ['GOOGLE_CLIENT_SECRET'],
     message: 'set both GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET, or neither',
+  })
+  .refine((e) => e.SMS_TRANSPORT !== 'brevo' || e.BREVO_API_KEY, {
+    path: ['BREVO_API_KEY'],
+    message: 'required when SMS_TRANSPORT=brevo',
+  })
+  .refine((e) => e.NODE_ENV !== 'production' || e.SMS_TRANSPORT === 'brevo', {
+    path: ['SMS_TRANSPORT'],
+    message: 'must be brevo in production',
   })
   .refine((e) => e.NODE_ENV !== 'production' || e.BREVO_API_KEY, {
     path: ['BREVO_API_KEY'],
@@ -77,10 +96,14 @@ export function parseEnv(source: Record<string, string | undefined>): Env {
   return result.data;
 }
 
-/** Load apps/api/.env in development if present, then validate process.env. */
+/**
+ * Load apps/api/.env except in production and tests, then validate process.env. Tests never read it, so a
+ * developer's real keys (Brevo, Google) can't leak into test runs.
+ */
 export function loadEnv(): Env {
   const file = resolve(import.meta.dirname, '../../.env');
-  if (process.env.NODE_ENV !== 'production' && existsSync(file)) {
+  const mode = process.env.NODE_ENV;
+  if (mode !== 'production' && mode !== 'test' && existsSync(file)) {
     process.loadEnvFile(file);
   }
   return parseEnv(process.env);

@@ -351,3 +351,42 @@ export function KeyIllustration({ className }: { className?: string }) {
     </Svg>
   );
 }
+
+/** Phone confirmation: a text message with a 6-digit code arrives on the phone. */
+export function PhoneCodeIllustration({ className }: { className?: string }) {
+  return (
+    <Svg className={className} viewBox="0 0 240 180">
+      <circle cx="120" cy="92" r="84" className="fill-accent-soft" />
+      <g transform="translate(78 22)">
+        <rect width="84" height="150" rx="16" className="fill-ink" />
+        <rect x="6" y="8" width="72" height="134" rx="11" className="fill-surface" />
+        <rect x="32" y="13" width="20" height="4" rx="2" className="fill-line" />
+      </g>
+      <g transform="translate(38 66)">
+        <rect
+          width="132"
+          height="52"
+          rx="14"
+          className="fill-surface stroke-line"
+          strokeWidth="1.5"
+        />
+        <path d="M18 52 L14 64 L30 52 Z" className="fill-surface" />
+        <rect x="14" y="12" width="56" height="6" rx="3" className="fill-ink" />
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <rect
+            key={i}
+            x={14 + i * 18}
+            y="26"
+            width="13"
+            height="16"
+            rx="4"
+            className={i < 3 ? 'fill-accent' : 'fill-sunk'}
+          />
+        ))}
+      </g>
+      <CheckBadge x={170} y={46} r={13} />
+      <Sparkle x={40} y={40} s={0.8} />
+      <Sparkle x={206} y={140} s={0.7} tone="good" />
+    </Svg>
+  );
+}

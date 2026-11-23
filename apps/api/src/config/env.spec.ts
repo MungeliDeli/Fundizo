@@ -22,6 +22,7 @@ describe('parseEnv', () => {
     AUTH_SECRET: 'a-real-production-secret-of-sufficient-length',
     BREVO_API_KEY: 'xkeysib-test-key',
     MAIL_FROM_EMAIL: 'no-reply@fundizo.example',
+    SMS_TRANSPORT: 'brevo',
   };
 
   it('accepts complete production config', () => {
@@ -32,6 +33,14 @@ describe('parseEnv', () => {
 
   it('requires Brevo in production (no dev outbox there)', () => {
     expect(() => parseEnv({ ...production, BREVO_API_KEY: '' })).toThrow(/BREVO_API_KEY/);
+  });
+
+  it('never uses the free dev SMS outbox in production', () => {
+    expect(() => parseEnv({ ...production, SMS_TRANSPORT: 'outbox' })).toThrow(/SMS_TRANSPORT/);
+  });
+
+  it('needs a Brevo key before sending real SMS', () => {
+    expect(() => parseEnv({ SMS_TRANSPORT: 'brevo' })).toThrow(/BREVO_API_KEY/);
   });
 
   it('refuses the dev secret in production', () => {
