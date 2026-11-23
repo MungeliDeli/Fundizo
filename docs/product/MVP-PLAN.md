@@ -1,6 +1,6 @@
 # MVP build plan: one feature at a time, end to end
 
-**Status:** Proposed (2026-11-23), waiting for approval.
+**Status:** Approved 2026-11-23.
 
 ## How we work
 
@@ -8,15 +8,14 @@ We build in **vertical slices**. Each slice is one user-visible capability, buil
 
 For every slice:
 
-1. **Plan:** a short note covering scope, feature IDs, the tables and endpoints, and the screens. The user agrees before code starts.
-2. **Build** on its own branch, `feat/<ID>-<name>`.
-3. **Done means:**
-   - The database migration, API and UI are all working together. No mocked backends, except external services such as SMS or MTN, which run behind a fake adapter until their real account is available.
-   - Checks pass: typecheck, lint and tests (unit + API integration tests against real Postgres).
+1. **Build** on its own branch, `feat/<ID>-<name>`.
+2. **Done means:**
+   - The database migration, API and UI are all working together. No mocked backends, except external services (SMS, payments), which run behind a fake adapter until their sandbox is set up.
+   - Checks pass: typecheck, lint, tests (unit + API integration tests against real Postgres), build.
    - The UI works at phone width (~390 px) **and** desktop width (~1280 px+), in light and dark.
    - The feature doc is in `docs/features/`, and the status is updated in `FEATURES.md`.
-   - It's committed and pushed, and a PR is open.
-4. **The user sees it running** (the Codespace link) and says OK. Then we merge it to `main`.
+3. **Merge** to `main` and push.
+4. **Show the user:** what the feature does, in plain words, and where to see it running. Wait for their OK.
 5. The next slice starts. **Never two slices at once.**
 
 ## What's in the MVP

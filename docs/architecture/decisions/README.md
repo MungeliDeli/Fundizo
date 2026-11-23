@@ -19,4 +19,4 @@ An ADR records one significant decision: the context, what we chose, what we rej
 | #                                     | Title                                                       | Status   |
 | ------------------------------------- | ----------------------------------------------------------- | -------- |
 | [0001](0001-baseline-architecture.md) | Baseline architecture and engineering decisions (from SPEC) | Accepted |
-| [0002](0002-mvp-providers-zynlepay-brevo-aws.md) | MVP providers: ZynlePay sandbox, Brevo email/SMS, AWS | Proposed |
+| [0002](0002-mvp-providers-zynlepay-brevo-aws.md) | MVP providers: ZynlePay sandbox, Brevo email/SMS, AWS | Accepted |

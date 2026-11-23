@@ -1,6 +1,6 @@
 # 0002. MVP providers: ZynlePay sandbox for mobile money, Brevo for email and SMS, AWS for hosting
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-11-23
 - **Feature IDs:** F-07, F-08, D-06, D-07, P-04, N-01, N-02, N-04, D-11, F-03
 - **Partly supersedes:** [0001](0001-baseline-architecture.md), the row "Payments: direct MTN and Airtel APIs", for the MVP only
