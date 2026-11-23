@@ -28,13 +28,13 @@ G-04,Groups and organisations,Member-drafted campaigns,Members draft campaigns; 
 G-05,Groups and organisations,Organisation upgrade,Upload registration certificate and authorisation letter to get the organisation badge,2,Must,Organisations,Not started
 G-06,Groups and organisations,Organisation wallet,Payouts to an MTN/Airtel wallet in the organisation's registered name,2,Should,Organisations,Not started
 G-07,Groups and organisations,Group and organisation page,"Public page with campaigns, member count and verification status; can be followed",2,Should,Groups,Not started
-C-01,Campaigns,Creation wizard,6 steps with a progress bar and autosave at every step,1,Must,Organisers,Not started
-C-02,Campaigns,Beneficiary choice,"Raise for myself or for someone else (name, phone, relationship)",1,Must,Organisers,Not started
-C-03,Campaigns,Categories,"Medical, Funeral, Education, Emergency, Community, Event, Other",1,Must,Organisers,Not started
-C-04,Campaigns,Story editor,"Title plus guided prompts (who, what happened, what the money is for, by when) with live preview",1,Must,Organisers,Not started
+C-01,Campaigns,Creation wizard,6 steps with a progress bar and autosave at every step,1,Must,Organisers,In progress
+C-02,Campaigns,Beneficiary choice,"Raise for myself or for someone else (name, phone, relationship)",1,Must,Organisers,Done
+C-03,Campaigns,Categories,"Medical, Funeral, Education, Emergency, Community, Event, Other",1,Must,Organisers,Done
+C-04,Campaigns,Story editor,"Title plus guided prompts (who, what happened, what the money is for, by when) with live preview",1,Must,Organisers,Done
 C-05,Campaigns,Photo upload,Cover photo plus up to 10; compressed on the phone; option to blur sensitive images,1,Must,Organisers,Not started
-C-06,Campaigns,Goal and end date,"Goal in ZMW (keep what you raise), optional end date, goal can be raised later",1,Must,Organisers,Not started
-C-07,Campaigns,Preview and publish,Preview as donors and WhatsApp will see it; publishing makes it live at once,1,Must,Organisers,Not started
+C-06,Campaigns,Goal and end date,"Goal in ZMW (keep what you raise), optional end date, goal can be raised later",1,Must,Organisers,In progress
+C-07,Campaigns,Preview and publish,Preview as donors and WhatsApp will see it; publishing makes it live at once,1,Must,Organisers,Done
 C-08,Campaigns,Co-organisers,"Up to 3 helpers who can share, post updates and thank donors, but not withdraw",1,Should,Organisers,Not started
 C-09,Campaigns,Funeral template,"No goal needed; deceased's name, burial date and place; same-day verification path",1,Must,Organisers,Not started
 C-10,Campaigns,Campaign lifecycle,"Pause, end and close; switch a medical campaign to a funeral campaign with donors told",1,Must,Organisers,Not started
@@ -82,7 +82,7 @@ P-09,Payouts,Daily reconciliation,Match MTN and Airtel statements to the ledger;
 P-10,Payouts,Group second approval,A second treasurer approves with one tap from an SMS or push notification,2,Must,Groups,Not started
 P-11,Payouts,Bank payouts,Withdraw to a bank account,3,Could,Organisers,Not started
 O-01,Outreach and sharing,Share sheet,"One tap to WhatsApp chat, WhatsApp Status, Facebook, TikTok, or copy link",1,Must,Everyone,Not started
-O-02,Outreach and sharing,Link previews,"Server-rendered preview with photo, title and amount raised",1,Must,Everyone,Not started
+O-02,Outreach and sharing,Link previews,"Server-rendered preview with photo, title and amount raised",1,Must,Everyone,In progress
 O-03,Outreach and sharing,Pre-written share messages,"Editable message per category, ready to send with the link",1,Must,Organisers,Not started
 O-04,Outreach and sharing,Donor reshare,"After donating: ""Share to help reach the goal""",1,Must,Donors,Not started
 O-05,Outreach and sharing,Share image for Status and stories,"Auto-made image with cover photo and progress bar, sized for WhatsApp Status and Facebook stories",1,Should,Everyone,Not started

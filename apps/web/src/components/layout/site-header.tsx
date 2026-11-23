@@ -46,20 +46,37 @@ export function SiteHeader({ user }: { user: HeaderUser }) {
         </nav>
 
         <div className="flex items-center gap-2 md:gap-4 md:border-l md:border-line md:pl-6">
-          {user ? (
+          {/* Phones get this link in the menu, so the bar stays uncluttered. */}
+          <span className="hidden md:block">
             <Link
-              href="/account"
-              className="flex items-center gap-2 rounded-full py-1 pl-1 pr-1 text-sm font-semibold text-ink no-underline hover:bg-sunk md:pr-3"
-              aria-label={`Your account (${user.firstName})`}
+              href="/start"
+              className={buttonClasses('accent', 'sm', 'h-10 whitespace-nowrap px-4')}
             >
-              <span
-                className="grid size-9 place-items-center rounded-full bg-accent-soft text-sm font-bold text-accent-ink"
-                aria-hidden="true"
-              >
-                {initials}
-              </span>
-              <span className="hidden md:inline">{user.firstName}</span>
+              Start a fundraiser
             </Link>
+          </span>
+          {user ? (
+            <>
+              <Link
+                href="/fundraisers"
+                className="hidden text-base font-semibold text-ink no-underline hover:text-accent-ink lg:inline"
+              >
+                Your fundraisers
+              </Link>
+              <Link
+                href="/account"
+                className="flex items-center gap-2 rounded-full py-1 pl-1 pr-1 text-sm font-semibold text-ink no-underline hover:bg-sunk md:pr-3"
+                aria-label={`Your account (${user.firstName})`}
+              >
+                <span
+                  className="grid size-9 place-items-center rounded-full bg-accent-soft text-sm font-bold text-accent-ink"
+                  aria-hidden="true"
+                >
+                  {initials}
+                </span>
+                <span className="hidden md:inline">{user.firstName}</span>
+              </Link>
+            </>
           ) : (
             <>
               <Link
@@ -68,7 +85,10 @@ export function SiteHeader({ user }: { user: HeaderUser }) {
               >
                 Log in
               </Link>
-              <Link href="/signup" className={buttonClasses('accent', 'sm', 'md:h-10 md:px-4')}>
+              <Link
+                href="/signup"
+                className={buttonClasses('outline', 'sm', 'whitespace-nowrap md:h-10 md:px-4')}
+              >
                 Sign up
               </Link>
             </>
@@ -102,10 +122,14 @@ export function SiteHeader({ user }: { user: HeaderUser }) {
         <nav id={menuId} aria-label="Main" className="border-t border-line bg-ground md:hidden">
           <ul className="container-page m-0 flex list-none flex-col py-2">
             {[
+              { label: 'Start a fundraiser', href: '/start' },
+              ...(user
+                ? [
+                    { label: 'Your fundraisers', href: '/fundraisers' },
+                    { label: 'Your profile', href: '/account' },
+                  ]
+                : [{ label: 'Log in', href: '/login' }]),
               ...NAV_ITEMS,
-              user
-                ? { label: 'Your account', href: '/account' }
-                : { label: 'Log in', href: '/login' },
             ].map((item) => (
               <li key={item.href}>
                 <Link

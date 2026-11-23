@@ -14,6 +14,7 @@ export const ErrorCode = z.enum([
   'csrf_failed',
   'phone_in_use',
   'sms_failed',
+  'not_publishable',
   'not_found',
   'internal_error',
 ]);

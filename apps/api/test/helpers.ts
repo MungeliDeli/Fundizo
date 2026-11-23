@@ -31,7 +31,9 @@ export async function resetData() {
   }
   const client = new pg.Client({ connectionString: dbUrl });
   await client.connect();
-  await client.query('truncate users, sessions, one_time_tokens, user_identities cascade');
+  await client.query(
+    'truncate users, sessions, one_time_tokens, user_identities, campaigns, campaign_beneficiaries cascade',
+  );
   await client.end();
   const redis = new Redis(redisUrl);
   await redis.flushdb();

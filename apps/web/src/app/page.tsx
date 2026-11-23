@@ -47,15 +47,15 @@ export default function HomePage() {
             fundraiser is checked, and every kwacha can be traced.
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            <Link href="/signup" className={buttonClasses('accent', 'lg')}>
-              Create your account
+            <Link href="/start" className={buttonClasses('accent', 'lg')}>
+              Start a fundraiser
             </Link>
-            <Link href="/login" className={buttonClasses('outline', 'lg')}>
-              Log in
+            <Link href="/#how-it-works" className={buttonClasses('outline', 'lg')}>
+              How it works
             </Link>
           </div>
           <p className="m-0 text-sm text-ink-3">
-            Starting a fundraiser opens soon. Accounts are open now.
+            Free for organisers. Giving by MTN MoMo and Airtel Money opens soon.
           </p>
         </div>
 

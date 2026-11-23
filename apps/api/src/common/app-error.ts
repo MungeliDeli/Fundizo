@@ -37,6 +37,11 @@ export const Errors = {
       'This link has expired or was already used. Ask for a new one.',
     ),
   unauthenticated: () => new AppError('unauthenticated', 401, 'Please log in.'),
+  notFound: () => new AppError('not_found', 404, 'Not found.'),
+  notPublishable: (fields: Record<string, string>) =>
+    new AppError('not_publishable', 422, 'A few things are still needed before publishing.', {
+      fields,
+    }),
   phoneInUse: () =>
     new AppError(
       'phone_in_use',

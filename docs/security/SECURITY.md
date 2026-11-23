@@ -60,6 +60,10 @@ _Implemented in slice 1 ([ADR 0004](../architecture/decisions/0004-accounts-emai
 - Use UUIDs for IDs, but **never rely on them being unguessable** for security.
 - Every endpoint has a test proving another user gets denied.
 
+### Campaigns (slice 3b)
+
+- Owner routes load every campaign **with** the session user's id, so another person's campaign is "not found" (404), never "forbidden". Public pages serve published campaigns only, and the public contract has no field for phone numbers or emails (guarded by a test). Details: [C-01 feature doc](../features/C-01-create-and-publish.md#6-security--privacy).
+
 ### Payments and ledger
 
 - See the money rules in CLAUDE.md. In addition:

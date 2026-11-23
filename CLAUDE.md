@@ -10,7 +10,7 @@ Fundizo is a GoFundMe-style fundraising platform for Zambia. Donors pay with MTN
 
 ## Current state
 
-- **Building the MVP slice by slice.** The build order and which slices are done (✅) are in [docs/product/MVP-PLAN.md](docs/product/MVP-PLAN.md). Shipped so far: skeleton (API, web, CI), email accounts, Google sign-in, profile + phone confirmation. Each shipped feature has a doc in [docs/features/](docs/features/).
+- **Building the MVP slice by slice.** The build order and which slices are done (✅) are in [docs/product/MVP-PLAN.md](docs/product/MVP-PLAN.md). Shipped so far: skeleton (API, web, CI), email accounts, Google sign-in, profile + phone confirmation, create and publish a fundraiser. Each shipped feature has a doc in [docs/features/](docs/features/).
 - **Work one slice at a time, end to end** (DB → API → web UI → tests → docs). Never build the whole frontend first and wire the backend later. Never start the next slice before the user has seen the current one running and said OK.
 - **Per slice:** build it on `feat/<ID>-<name>`. When it works end to end and every check passes, **merge it to `main` yourself** (pre-approved by the user) and push. Then give the user (1) a plain-language explanation of the feature and (2) exactly where to see it (the running link and what to click). Wait for their OK before starting the next slice.
 - Ask first only for decisions that are genuinely the user's (product choices, money rules, providers, costs).

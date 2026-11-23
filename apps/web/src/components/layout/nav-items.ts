@@ -1,6 +1,6 @@
 /**
  * Main navigation. One list drives both the desktop bar and the mobile menu, so they never
- * drift apart. Add items as slices ship (Start a fundraiser arrives with C-01).
+ * drift apart. "Start a fundraiser" and account links are added by the header itself.
  */
 export interface NavItem {
   label: string;

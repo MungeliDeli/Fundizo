@@ -10,6 +10,7 @@ import { GoogleAuthService } from './google-auth.service.js';
 import { MeController } from './me.controller.js';
 import { ProfileService } from './profile.service.js';
 import { SessionsService } from './sessions.service.js';
+import { UserDirectory } from './user-directory.service.js';
 import { UserViewService } from './user-view.service.js';
 
 /** Identity: users, sessions, email and Google sign-in (ADR 0004). Other modules use AuthGuard only. */
@@ -21,6 +22,7 @@ import { UserViewService } from './user-view.service.js';
     ProfileService,
     SessionsService,
     UserViewService,
+    UserDirectory,
     AuthGuard,
     RateLimiter,
     {
@@ -32,6 +34,7 @@ import { UserViewService } from './user-view.service.js';
           : null,
     },
   ],
-  exports: [AuthGuard, SessionsService],
+  // Public interface for other modules: the session guard and a read-only user directory.
+  exports: [AuthGuard, SessionsService, UserDirectory],
 })
 export class IdentityModule {}

@@ -43,13 +43,13 @@ Source of truth for what to build. IDs are stable: reference them in branches, c
 
 | ID | Feature | What it does | Priority | Users | Status |
 | --- | --- | --- | --- | --- | --- |
-| C-01 | Creation wizard | 6 steps with a progress bar and autosave at every step | Must | Organisers | Not started |
-| C-02 | Beneficiary choice | Raise for myself or for someone else (name, phone, relationship) | Must | Organisers | Not started |
-| C-03 | Categories | Medical, Funeral, Education, Emergency, Community, Event, Other | Must | Organisers | Not started |
-| C-04 | Story editor | Title plus guided prompts (who, what happened, what the money is for, by when) with live preview | Must | Organisers | Not started |
+| C-01 | Creation wizard | 6 steps with a progress bar and autosave at every step | Must | Organisers | In progress |
+| C-02 | Beneficiary choice | Raise for myself or for someone else (name, phone, relationship) | Must | Organisers | Done |
+| C-03 | Categories | Medical, Funeral, Education, Emergency, Community, Event, Other | Must | Organisers | Done |
+| C-04 | Story editor | Title plus guided prompts (who, what happened, what the money is for, by when) with live preview | Must | Organisers | Done |
 | C-05 | Photo upload | Cover photo plus up to 10; compressed on the phone; option to blur sensitive images | Must | Organisers | Not started |
-| C-06 | Goal and end date | Goal in ZMW (keep what you raise), optional end date, goal can be raised later | Must | Organisers | Not started |
-| C-07 | Preview and publish | Preview as donors and WhatsApp will see it; publishing makes it live at once | Must | Organisers | Not started |
+| C-06 | Goal and end date | Goal in ZMW (keep what you raise), optional end date, goal can be raised later | Must | Organisers | In progress |
+| C-07 | Preview and publish | Preview as donors and WhatsApp will see it; publishing makes it live at once | Must | Organisers | Done |
 | C-08 | Co-organisers | Up to 3 helpers who can share, post updates and thank donors, but not withdraw | Should | Organisers | Not started |
 | C-09 | Funeral template | No goal needed; deceased's name, burial date and place; same-day verification path | Must | Organisers | Not started |
 | C-10 | Campaign lifecycle | Pause, end and close; switch a medical campaign to a funeral campaign with donors told | Must | Organisers | Not started |
@@ -103,7 +103,7 @@ Source of truth for what to build. IDs are stable: reference them in branches, c
 | ID | Feature | What it does | Priority | Users | Status |
 | --- | --- | --- | --- | --- | --- |
 | O-01 | Share sheet | One tap to WhatsApp chat, WhatsApp Status, Facebook, TikTok, or copy link | Must | Everyone | Not started |
-| O-02 | Link previews | Server-rendered preview with photo, title and amount raised | Must | Everyone | Not started |
+| O-02 | Link previews | Server-rendered preview with photo, title and amount raised | Must | Everyone | In progress |
 | O-03 | Pre-written share messages | Editable message per category, ready to send with the link | Must | Organisers | Not started |
 | O-04 | Donor reshare | After donating: "Share to help reach the goal" | Must | Donors | Not started |
 | O-05 | Share image for Status and stories | Auto-made image with cover photo and progress bar, sized for WhatsApp Status and Facebook stories | Should | Everyone | Not started |

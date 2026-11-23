@@ -45,6 +45,8 @@ flowchart TB
 | `outreach`      | share links, share stats                                                                | (none)                                            | O-*           |
 | platform        | outbox_events                                                                           | (none)                                            | F-09          |
 
+**Module interfaces in use:** `identity` exports `AuthGuard` (sessions) and `UserDirectory` (read-only name, place and verification flags; never email or phone). `campaigns` uses only those.
+
 **Rules**
 
 - A module touches only its own tables. Other modules use its exported service or listen to its events.
