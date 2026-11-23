@@ -1,3 +1,6 @@
+import Link from 'next/link';
+import { buttonClasses } from '@/components/ui/button';
+
 const STEPS = [
   {
     title: 'Start in minutes',
@@ -36,16 +39,23 @@ export default function HomePage() {
           <p className="m-0 text-sm font-semibold uppercase tracking-[0.06em] text-accent-ink">
             Fundraising for Zambia
           </p>
-          <h1 className="display m-0 text-[2.5rem] leading-[1.05] md:text-6xl">
+          <h1 className="display m-0 text-5xl">
             Raise money together, with the mobile money you already use.
           </h1>
           <p className="m-0 max-w-xl text-lg leading-relaxed text-ink-2">
             For hospital bills, funerals, school fees, weddings and community projects. Every
             fundraiser is checked, and every kwacha can be traced.
           </p>
-          <p className="m-0 inline-flex items-center gap-2 self-start rounded-full bg-accent-soft px-3 py-1.5 text-sm font-medium text-accent-ink">
-            <span className="size-2 rounded-full bg-accent" aria-hidden="true" />
-            We’re building Fundizo now. Sign-up opens soon.
+          <div className="flex flex-wrap items-center gap-3">
+            <Link href="/signup" className={buttonClasses('accent', 'lg')}>
+              Create your account
+            </Link>
+            <Link href="/login" className={buttonClasses('outline', 'lg')}>
+              Log in
+            </Link>
+          </div>
+          <p className="m-0 text-sm text-ink-3">
+            Starting a fundraiser opens soon. Accounts are open now.
           </p>
         </div>
 
@@ -64,7 +74,7 @@ export default function HomePage() {
                 <span className="grid size-8 shrink-0 place-items-center rounded-full bg-sunk text-sm font-bold text-ink-2">
                   {i + 1}
                 </span>
-                <span className="pt-1 text-[15px] leading-snug">{text}</span>
+                <span className="pt-1 text-base leading-snug">{text}</span>
               </li>
             ))}
           </ol>
@@ -73,7 +83,7 @@ export default function HomePage() {
 
       <section id="how-it-works" className="scroll-mt-20 border-t border-line bg-surface/50">
         <div className="container-page flex flex-col gap-8 py-12 md:py-20">
-          <h2 className="display m-0 text-3xl md:text-4xl">How it works</h2>
+          <h2 className="display m-0 text-4xl">How it works</h2>
           <ol className="m-0 grid list-none gap-4 p-0 md:grid-cols-3 md:gap-6">
             {STEPS.map((s, i) => (
               <li
@@ -93,7 +103,7 @@ export default function HomePage() {
         id="trust"
         className="container-page flex scroll-mt-20 flex-col gap-8 py-12 md:py-20"
       >
-        <h2 className="display m-0 text-3xl md:text-4xl">Why people can trust it</h2>
+        <h2 className="display m-0 text-4xl">Why people can trust it</h2>
         <ul className="m-0 grid list-none gap-6 p-0 md:grid-cols-3 md:gap-10">
           {TRUST.map((t) => (
             <li key={t.title} className="flex flex-col gap-2 border-t-2 border-good pt-4">

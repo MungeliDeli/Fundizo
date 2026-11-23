@@ -1,6 +1,6 @@
 /**
  * Main navigation. One list drives both the desktop bar and the mobile menu, so they never
- * drift apart. Add items as slices ship (Log in arrives with A-01, Start a fundraiser with C-01).
+ * drift apart. Add items as slices ship (Start a fundraiser arrives with C-01).
  */
 export interface NavItem {
   label: string;

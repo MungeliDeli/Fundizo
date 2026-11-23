@@ -8,9 +8,9 @@ F-06,Foundation,Double-entry ledger,"Permanent ledger entries; every balance is 
 F-07,Foundation,MTN MoMo adapter (sandbox),Collections and disbursements built and tested against MTN's free sandbox,0,Must,Team,Not started
 F-08,Foundation,Airtel Money adapter (sandbox),Collections and disbursements built and tested against Airtel's test environment,0,Must,Team,Not started
 F-09,Foundation,Job queue and outbox,"Workers for payment status checks, SMS, sweeps and reconciliation, with retries",0,Must,Team,Not started
-A-01,Accounts,Phone sign-up and login,"OTP by SMS, read automatically on Android; no password or email needed",1,Must,Everyone,Not started
+A-01,Accounts,Email sign-up and login,"Name, email and password; email verified with a 6-digit code; log in, forgot/set password (ADR 0004)",1,Must,Everyone,Done
 A-02,Accounts,Profile,"Name, photo, district and language",1,Must,Everyone,Not started
-A-03,Accounts,Sessions,Short-lived access tokens with refresh; log out of other devices,1,Must,Everyone,Not started
+A-03,Accounts,Sessions,Secure server-side sessions; log out; log out of other devices (ADR 0004),1,Must,Everyone,Done
 A-04,Accounts,ID verification,NRC or passport front and back plus a live selfie; unclear cases go to a review queue,1,Must,Organisers,Not started
 A-05,Accounts,Wallet name match,The registered MTN/Airtel wallet name must match the verified ID,1,Must,Organisers,Not started
 A-06,Accounts,Payout wallets,Add and verify an MTN or Airtel wallet; a change needs OTP and a 48-hour wait,1,Must,Organisers,Not started
@@ -18,6 +18,8 @@ A-07,Accounts,Account recovery,"A new phone or SIM needs an ID re-check, to stop
 A-08,Accounts,Notification settings,"Choose SMS, push or email; opt out per campaign",1,Should,Everyone,Not started
 A-09,Accounts,Privacy controls,Download my data; delete my account (Data Protection Act),1,Should,Everyone,Not started
 A-10,Accounts,Staff accounts,"Admin, moderator, finance and support roles; 2FA required",1,Must,Staff,Not started
+A-12,Accounts,Sign in with Google,One-tap Google sign-in; links to an existing account with the same verified email,1,Must,Everyone,Not started
+A-13,Accounts,Verify phone number,Add an MTN/Airtel number to the profile and verify it by SMS code; required before publishing,1,Must,Organisers,Not started
 A-11,Accounts,Local languages,"Bemba, Nyanja and Tonga for key screens and SMS",2,Should,Everyone,Not started
 G-01,Groups and organisations,Create a group,"Name, type and photo; invite members by phone with an SMS or WhatsApp link",2,Must,Groups,Not started
 G-02,Groups and organisations,Group roles,"Owner, treasurer and member, each with set permissions",2,Must,Groups,Not started

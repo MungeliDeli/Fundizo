@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, Inter } from 'next/font/google';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { SiteHeader } from '@/components/layout/site-header';
+import { getCurrentUser } from '@/lib/session';
 import './globals.css';
 
 // Self-hosted at build time by next/font: no runtime request to Google, small subsets.
@@ -28,7 +29,8 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const user = await getCurrentUser();
   return (
     <html lang="en" className={`${inter.variable} ${bricolage.variable}`}>
       <body className="flex min-h-dvh flex-col">
@@ -38,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <SiteHeader />
+        <SiteHeader user={user ? { firstName: user.firstName, lastName: user.lastName } : null} />
         <main id="main" className="flex-1">
           {children}
         </main>

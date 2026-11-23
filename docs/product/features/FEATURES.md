@@ -2,7 +2,7 @@
 
 Source of truth for what to build. IDs are stable: reference them in branches, commits and PRs (e.g. `feat(D-06): MTN collection`). Full context is in [`SPEC.md`](../SPEC.md). This file is the **canonical** list; `FEATURES.csv` and the `.xlsx` are exports and must be kept in sync (see [docs/README.md](../../README.md)).
 
-124 features. Priority: **Must** / Should / Could. Status: Not started / In progress / Done.
+126 features. Priority: **Must** / Should / Could. Status: Not started / In progress / Done.
 
 ## Phase 0 · Foundation (9)
 
@@ -20,15 +20,15 @@ Source of truth for what to build. IDs are stable: reference them in branches, c
 | F-08 | Airtel Money adapter (sandbox) | Collections and disbursements built and tested against Airtel's test environment | Must | Team | Not started |
 | F-09 | Job queue and outbox | Workers for payment status checks, SMS, sweeps and reconciliation, with retries | Must | Team | Not started |
 
-## Phase 1 · MVP: donation campaigns (77)
+## Phase 1 · MVP: donation campaigns (79)
 
 ### Accounts
 
 | ID | Feature | What it does | Priority | Users | Status |
 | --- | --- | --- | --- | --- | --- |
-| A-01 | Phone sign-up and login | OTP by SMS, read automatically on Android; no password or email needed | Must | Everyone | Not started |
+| A-01 | Email sign-up and login | Name, email and password; email verified with a 6-digit code; log in, forgot/set password (ADR 0004) | Must | Everyone | Done |
 | A-02 | Profile | Name, photo, district and language | Must | Everyone | Not started |
-| A-03 | Sessions | Short-lived access tokens with refresh; log out of other devices | Must | Everyone | Not started |
+| A-03 | Sessions | Secure server-side sessions; log out; log out of other devices (ADR 0004) | Must | Everyone | Done |
 | A-04 | ID verification | NRC or passport front and back plus a live selfie; unclear cases go to a review queue | Must | Organisers | Not started |
 | A-05 | Wallet name match | The registered MTN/Airtel wallet name must match the verified ID | Must | Organisers | Not started |
 | A-06 | Payout wallets | Add and verify an MTN or Airtel wallet; a change needs OTP and a 48-hour wait | Must | Organisers | Not started |
@@ -36,6 +36,8 @@ Source of truth for what to build. IDs are stable: reference them in branches, c
 | A-08 | Notification settings | Choose SMS, push or email; opt out per campaign | Should | Everyone | Not started |
 | A-09 | Privacy controls | Download my data; delete my account (Data Protection Act) | Should | Everyone | Not started |
 | A-10 | Staff accounts | Admin, moderator, finance and support roles; 2FA required | Must | Staff | Not started |
+| A-12 | Sign in with Google | One-tap Google sign-in; links to an existing account with the same verified email | Must | Everyone | Not started |
+| A-13 | Verify phone number | Add an MTN/Airtel number to the profile and verify it by SMS code; required before publishing | Must | Organisers | Not started |
 
 ### Campaigns
 

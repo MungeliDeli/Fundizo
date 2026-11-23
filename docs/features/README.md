@@ -12,6 +12,7 @@ Every feature we build gets a living doc here. It explains how the feature **act
 
 ## Index
 
-| Doc                               | Feature IDs                   | Status  |
-| --------------------------------- | ----------------------------- | ------- |
-| [F-01 Skeleton](F-01-skeleton.md) | F-01, F-02 (CI), F-04 (local) | Shipped |
+| Doc                                                  | Feature IDs                   | Status  |
+| ---------------------------------------------------- | ----------------------------- | ------- |
+| [A-01 Email sign-up and login](A-01-email-signup.md) | A-01, A-03                    | Shipped |
+| [F-01 Skeleton](F-01-skeleton.md)                    | F-01, F-02 (CI), F-04 (local) | Shipped |

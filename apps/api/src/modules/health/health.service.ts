@@ -3,7 +3,7 @@ import type { DependencyStatus, HealthResponse } from '@fundizo/shared';
 import type { Redis } from 'ioredis';
 import type pg from 'pg';
 import { PG_POOL } from '../../infra/database/database.module.js';
-import { REDIS } from '../../infra/redis/redis.module.js';
+import { ensureConnected, REDIS } from '../../infra/redis/redis.module.js';
 
 const CHECK_TIMEOUT_MS = 2_000;
 const VERSION = process.env.npm_package_version ?? '0.1.0';
@@ -23,7 +23,7 @@ export class HealthService {
         await this.pool.query('select 1');
       }),
       this.probe('redis', async () => {
-        if (this.redis.status === 'wait' || this.redis.status === 'end') await this.redis.connect();
+        await ensureConnected(this.redis);
         await this.redis.ping();
       }),
     ]);

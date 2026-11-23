@@ -11,10 +11,13 @@ async function bootstrap() {
   app.use(helmet());
   // Browsers reach the API only through the web app's same-origin /api proxy, so no CORS is
   // enabled: cross-origin browser requests are refused by default.
-  app.getHttpAdapter().getInstance().disable('x-powered-by');
+  const env = app.get<Env>(ENV);
+  const express = app.getHttpAdapter().getInstance();
+  express.disable('x-powered-by');
+  // The client IP (for rate limits) comes from X-Forwarded-For, set by the web app's proxy.
+  express.set('trust proxy', env.TRUST_PROXY_HOPS);
   app.enableShutdownHooks();
 
-  const env = app.get<Env>(ENV);
   await app.listen(env.PORT);
 }
 

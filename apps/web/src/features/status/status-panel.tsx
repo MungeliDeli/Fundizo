@@ -59,7 +59,7 @@ function StatusBadge({ status }: { status: DependencyStatus | 'checking' }) {
   const label = { up: 'Working', down: 'Down', checking: 'Checking' } as const;
   return (
     <span
-      className={`inline-flex h-7 items-center rounded-full px-2.5 text-[12.5px] font-semibold ${styles[status]}`}
+      className={`inline-flex h-7 items-center rounded-full px-2.5 text-xs font-semibold ${styles[status]}`}
     >
       {label[status]}
     </span>

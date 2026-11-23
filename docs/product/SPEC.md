@@ -260,6 +260,8 @@ Donations start the moment the campaign is published. The money is held in the l
 
 ### 1. Sign up (organiser): 3 screens
 
+> **Changed 2026-11-23 ([ADR 0004](../architecture/decisions/0004-accounts-email-google-phone-later.md)):** sign-up is now email + password (verified by email code) or Google; the phone is added and verified later, before publishing. The steps below are the original idea.
+
 1. Tap **Start a fundraiser** (home page, or the footer of any campaign page).
 2. Enter a phone number; the OTP is read automatically on Android.
 3. Enter first and last name. Done.

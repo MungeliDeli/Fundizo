@@ -26,22 +26,23 @@ The MVP is the **Phase 0 + Phase 1 "Must"** features from [FEATURES.md](features
 
 ## Which comes first: accounts, not the feed
 
-**Recommendation: start with accounts (phone sign-up and login).** Almost every other feature needs to know *who* is acting: creating a campaign, withdrawing, staff review. The feed comes last, because it only shows things the other features create.
+**Accounts first (email + password, then Google, then phone; see [ADR 0004](../architecture/decisions/0004-accounts-email-google-phone-later.md)).** Almost every other feature needs to know *who* is acting: creating a campaign, withdrawing, staff review. The feed comes last, because it only shows things the other features create.
 
 ## The slices, in order
 
 | # | Slice | Feature IDs | What you'll be able to see and do |
 | --- | --- | --- | --- |
 | 0 ✅ | **Skeleton** | F-01, F-02 (CI), F-04 (local config) | Monorepo with `apps/api` (NestJS), `apps/web` (Next.js), `packages/shared`; Postgres and Redis in Docker; migrations wired up; GitHub Actions runs checks. A responsive web shell (desktop top bar, mobile bottom bar) shows "API connected". |
-| 1 | **Sign up and log in with phone** | A-01, A-03, N-01 (dev SMS adapter) | Enter a phone number → get an OTP (shown in a dev-only "SMS outbox" until Brevo SMS credits are bought) → add your name → logged in. Log out, log in again, log out of other devices. |
-| 2 | **Profile** | A-02 | View and edit your name, district and language. (The photo comes with slice 4.) |
-| 3 | **Create and publish a campaign** | C-01, C-02, C-03, C-04, C-06, C-07 | The wizard (for me or someone else, category, goal, story) saves each step to the server; publish; the public campaign page renders on the server with link previews (O-02). Open the link logged out. |
+| 1 ✅ | **Email sign-up and login** | A-01, A-03 | Sign up with name, email and password → 6-digit code by email (Brevo) → verified and logged in. Log in, log out, log out of other devices, forgot/set password. Responsive auth screens with illustrations; fluid type across the site. |
+| 2 | **Continue with Google** | A-12 | One-tap Google sign-in; links to an existing verified account with the same email. |
+| 3 | **Profile and phone** | A-02, A-13 | Edit name, district, language; add a phone number and verify it by SMS code (required before publishing). |
+| 3b | **Create and publish a campaign** | C-01, C-02, C-03, C-04, C-06, C-07 | The wizard saves each step to the server; publish (needs a verified phone); public campaign page with link previews (O-02). |
 | 4 | **Photos** | C-05 | Upload a cover and up to 10 photos (presigned uploads; MinIO locally, S3 later), compressed on the phone, EXIF stripped, shown on the page and in link previews. |
 | 5 | **Ledger and background jobs** | F-06, F-09 | Append-only double-entry ledger (enforced in the DB), transactional outbox, BullMQ worker. Visible as: campaign totals are now calculated from the ledger, plus a passing property-test report. |
 | 6 | **Donate (fake provider)** | D-01, D-02, D-03, D-05, D-08, D-09, D-10, U-04 | Guest donates: amount, tip, number, name/anonymous, message → waiting screen → a dev "approve / decline / time out" panel plays the network → ledger entries → live total and donor wall. Idempotent, with no double charge. |
 | 7 | **Staging on AWS** | F-03, F-04, F-05 | The app deployed to a real staging URL, with secrets in Secrets Manager and error tracking. From here every merged slice deploys. |
 | 8 | **ZynlePay sandbox (MTN + Airtel)** | D-06, D-07 (via aggregator, [ADR 0002](../architecture/decisions/0002-mvp-providers-zynlepay-brevo-aws.md)) | The fake provider is replaced by a real `ZynlePayProvider` against Zynle's sandbox for MTN and Airtel numbers, with contract tests. *Needs Zynle sandbox credentials and docs.* |
-| 9 | **Email and SMS via Brevo** | N-01, N-02, N-04, D-11 | Brevo email (free plan) for receipts and notifications; Brevo transactional SMS for OTP and receipts; central message templates. *Needs a Brevo account; SMS needs a small credit pack.* |
+| 9 | **Messages and receipts** | N-02, N-04, D-11 | Central message templates; SMS and email receipts after each donation; optional email updates. (Brevo email is already live from slice 1; Brevo SMS from slice 3.) |
 | 10 | **Share** | O-01, O-02, O-03, O-04 | Share sheet, pre-written messages, reshare after donating. |
 | 11 | **Updates and thank-yous** | U-01, U-02, U-03 | Organiser posts updates; donors are notified; thank donors. |
 | 12 | **Staff accounts and admin console** | A-10, T-06, T-07 | Separate admin app with 2FA, roles, audit log, and a support lookup by phone or reference. |

@@ -13,14 +13,31 @@ describe('parseEnv', () => {
     expect(() => parseEnv({ NODE_ENV: 'production' })).toThrow(/DATABASE_URL.*REDIS_URL/);
   });
 
+  const production = {
+    NODE_ENV: 'production',
+    DATABASE_URL: 'postgresql://u:p@db.internal:5432/fundizo',
+    REDIS_URL: 'rediss://cache.internal:6379',
+    PORT: '8080',
+    WEB_BASE_URL: 'https://fundizo.example',
+    AUTH_SECRET: 'a-real-production-secret-of-sufficient-length',
+    BREVO_API_KEY: 'xkeysib-test-key',
+    MAIL_FROM_EMAIL: 'no-reply@fundizo.example',
+  };
+
   it('accepts complete production config', () => {
-    const env = parseEnv({
-      NODE_ENV: 'production',
-      DATABASE_URL: 'postgresql://u:p@db.internal:5432/fundizo',
-      REDIS_URL: 'rediss://cache.internal:6379',
-      PORT: '8080',
-    });
+    const env = parseEnv(production);
     expect(env.PORT).toBe(8080);
+    expect(env.SESSION_COOKIE_SECURE).toBe(true);
+  });
+
+  it('requires Brevo in production (no dev outbox there)', () => {
+    expect(() => parseEnv({ ...production, BREVO_API_KEY: '' })).toThrow(/BREVO_API_KEY/);
+  });
+
+  it('refuses the dev secret in production', () => {
+    expect(() =>
+      parseEnv({ ...production, AUTH_SECRET: 'dev-only-secret-never-use-in-production-0000' }),
+    ).toThrow(/AUTH_SECRET/);
   });
 
   it('rejects bad values without echoing them', () => {

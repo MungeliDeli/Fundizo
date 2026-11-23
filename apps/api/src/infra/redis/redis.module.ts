@@ -4,6 +4,11 @@ import { ENV, type Env } from '../../config/env.js';
 
 export const REDIS = Symbol('REDIS');
 
+/** The client connects lazily; call before commands that must not be dropped. */
+export async function ensureConnected(redis: Redis) {
+  if (redis.status === 'wait' || redis.status === 'end') await redis.connect();
+}
+
 /** Shared Redis client (cache, rate limits, and the BullMQ connection later). */
 @Global()
 @Module({

@@ -20,7 +20,7 @@ const DOT: Record<HealthState['kind'], string> = {
 export function ApiStatusPill() {
   const state = useApiHealth();
   return (
-    <span className="inline-flex h-8 items-center gap-2 rounded-full border border-line bg-surface px-3 text-[13px] font-medium text-ink-2">
+    <span className="inline-flex h-8 items-center gap-2 rounded-full border border-line bg-surface px-3 text-xs font-medium text-ink-2">
       <span className={`size-2 rounded-full ${DOT[state.kind]}`} aria-hidden="true" />
       <span role="status">{LABEL[state.kind]}</span>
     </span>

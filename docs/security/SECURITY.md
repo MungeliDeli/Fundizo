@@ -39,10 +39,16 @@ Baselines: **OWASP ASVS Level 2** for the public app and API, **Level 3** for th
 
 ### Authentication and sessions
 
-- Phone + OTP for users. OTP codes are generated with a CSPRNG and stored as an HMAC (never plaintext). Responses are the same whether or not the number exists.
-- Access token: JWT, about 15 minutes, signed with an asymmetric key (ES256/EdDSA) kept in Secrets Manager or KMS; claims are kept minimal (no PII).
-- Refresh token: opaque random value, stored **hashed**, rotated on every use. Reuse of an old token revokes the whole family and alerts the user. "Log out of other devices" (A-03).
-- Web: tokens in `HttpOnly; Secure; SameSite=Lax` cookies, plus CSRF protection on cookie-authenticated state changes. Never put tokens in `localStorage`.
+_Implemented in slice 1 ([ADR 0004](../architecture/decisions/0004-accounts-email-google-phone-later.md), [A-01 feature doc](../features/A-01-email-signup.md))._
+
+- **Email + password.** Passwords are hashed with Argon2id (m = 19 MiB, t = 2, p = 1; PHC string). 10–128 characters; can't be the email. When no account matches, a dummy hash still runs, so timing doesn't reveal which emails exist.
+- **Email verification:** a 6-digit code from a CSPRNG, stored only as an HMAC keyed with `AUTH_SECRET` (per user). 15-minute expiry, single use, 5 wrong tries locks the code; only the newest code works.
+- **Password reset:** a 256-bit one-time link token (HMAC-stored), 30-minute expiry. Using it revokes every session and sends a "password changed" email.
+- **No account enumeration:** sign-up, resend and forgot-password answer identically whether or not the email exists; login has one generic error.
+- **Sessions:** opaque 256-bit token in an `HttpOnly; Secure; SameSite=Lax` cookie (`fz_session`), 30 days; only its HMAC is stored. Logout revokes it server-side; "log out of other devices" revokes the rest (A-03). Never put tokens in `localStorage`.
+- **CSRF:** every state-changing request needs the `X-Fundizo-CSRF: 1` header (rejected otherwise); the API allows no CORS and the browser reaches it only through the same-origin `/api` proxy.
+- **Rate limits (Redis):** sign-up per IP; login per email and per IP; code resends per email; verification per email; forgot/reset per email and per IP. Rate-limit keys hash the email.
+- Phone verification by SMS code (A-13) arrives in slice 3 under the same rules.
 - Staff: separate auth realm, **mandatory TOTP or WebAuthn**, shorter sessions, IP/geo anomaly alerts. Staff accounts are never also donor or organiser accounts.
 - Step-up OTP for sensitive actions: withdrawals, payout-wallet changes, adding co-organisers, account deletion.
 
@@ -91,7 +97,7 @@ Baselines: **OWASP ASVS Level 2** for the public app and API, **Level 3** for th
 ## 4. Logging, audit and incident response
 
 - **Audit log** (`audit_logs`): every staff action and every money state change, recording actor, action, target, before/after, reason and IP. Append-only; retained per legal advice.
-- **Alerts:** payment success rate drop, callback failures, reconciliation gaps, low float, OTP spikes, SMS spend spikes, refresh-token reuse, and staff login anomalies.
+- **Alerts:** payment success rate drop, callback failures, reconciliation gaps, low float, login-failure and code-verification spikes, SMS spend spikes, and staff login anomalies.
 - **Incident response:** detect → contain (pause payouts is a one-switch kill) → assess → notify the ODPC within 24 h if personal data is involved → fix → post-mortem. Runbooks will live in `docs/security/runbooks/` once infrastructure exists.
 
 ## 5. Reporting a vulnerability

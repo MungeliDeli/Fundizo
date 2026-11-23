@@ -34,18 +34,20 @@ Optional overrides: copy `apps/api/.env.example` → `apps/api/.env` and `apps/w
 
 Exact versions are in the `package.json` files and `pnpm-lock.yaml`. All were at least 14 days old when added.
 
-| Where             | Packages                                                                      | Why                                      |
-| ----------------- | ----------------------------------------------------------------------------- | ---------------------------------------- |
-| root              | `turbo` 2.11, `typescript` 6.0, `prettier` 3.9                                | Task runner, types, formatting           |
-| `packages/shared` | `zod` 4.6                                                                     | Contracts shared by API and web          |
-| `apps/api`        | `@nestjs/core`/`common`/`platform-express` 12.4, `reflect-metadata`, `rxjs`   | Framework (ESM only)                     |
-| `apps/api`        | `drizzle-orm` 0.45, `drizzle-kit` 0.31, `pg` 8.23                             | Database access and migrations           |
-| `apps/api`        | `ioredis` 6                                                                   | Redis client (BullMQ arrives in slice 5) |
-| `apps/api`        | `nestjs-pino` 5.3, `pino` 10, `pino-http` 11, `pino-pretty` (dev)             | Structured logs with redaction           |
-| `apps/api`        | `helmet` 8.3                                                                  | Security headers                         |
-| `apps/api`        | `@nestjs/cli` 12, `@nestjs/testing`, `supertest`, `vitest` 5.1, `oxlint` 1.92 | Build, tests, lint                       |
-| `apps/web`        | `next` 16.4, `react`/`react-dom` 19.3, `tailwindcss` 4.3                      | Web app and styling                      |
-| `apps/web`        | `vitest`, `jsdom`, `@testing-library/*`, `eslint` 9 + `eslint-config-next`    | Tests and lint                           |
+| Where             | Packages                                                                      | Why                                                                        |
+| ----------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| root              | `turbo` 2.11, `typescript` 6.0, `prettier` 3.9                                | Task runner, types, formatting                                             |
+| `packages/shared` | `zod` 4.6                                                                     | Contracts shared by API and web                                            |
+| `apps/api`        | `@nestjs/core`/`common`/`platform-express` 12.4, `reflect-metadata`, `rxjs`   | Framework (ESM only)                                                       |
+| `apps/api`        | `drizzle-orm` 0.45, `drizzle-kit` 0.31, `pg` 8.23                             | Database access and migrations                                             |
+| `apps/api`        | `ioredis` 6                                                                   | Redis client (BullMQ arrives in slice 5)                                   |
+| `apps/api`        | `nestjs-pino` 5.3, `pino` 10, `pino-http` 11, `pino-pretty` (dev)             | Structured logs with redaction                                             |
+| `apps/api`        | `helmet` 8.3                                                                  | Security headers                                                           |
+| `apps/api`        | Node's built-in `crypto.argon2`                                               | Password hashing (Argon2id); no extra package                              |
+| `apps/api`        | `@nestjs/cli` 12, `@nestjs/testing`, `supertest`, `vitest` 5.1, `oxlint` 1.92 | Build, tests, lint                                                         |
+| `apps/web`        | `next` 16.4, `react`/`react-dom` 19.3, `tailwindcss` 4.3                      | Web app and styling                                                        |
+| `apps/web`        | `server-only` 0.0.1                                                           | Stops server-only code (session lookup) from being bundled for the browser |
+| `apps/web`        | `vitest`, `jsdom`, `@testing-library/*`, `eslint` 9 + `eslint-config-next`    | Tests and lint                                                             |
 
 ### Version notes for slice 0
 
