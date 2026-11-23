@@ -1,6 +1,7 @@
 import { Body, Controller, Get, HttpCode, Post, Req, Res, UseGuards } from '@nestjs/common';
 import {
   type AcceptedResponse,
+  type AuthProvidersResponse,
   EmailOnlyRequest,
   LoginRequest,
   ResetPasswordRequest,
@@ -13,13 +14,15 @@ import { Inject } from '@nestjs/common';
 import { readCookie } from '../../common/cookies.js';
 import { ENV, type Env } from '../../config/env.js';
 import { AuthGuard, CurrentSession } from './auth.guard.js';
-import { AuthService, type SignedIn, toPublicUser } from './auth.service.js';
+import { cookieOptions } from './cookies.js';
+import { AuthService, type SignedIn } from './auth.service.js';
 import {
   type ActiveSession,
   type RequestMeta,
   SESSION_COOKIE,
   SessionsService,
 } from './sessions.service.js';
+import { UserViewService } from './user-view.service.js';
 
 const ACCEPTED: AcceptedResponse = { ok: true };
 
@@ -29,6 +32,7 @@ export class AuthController {
   constructor(
     private readonly auth: AuthService,
     private readonly sessions: SessionsService,
+    private readonly view: UserViewService,
     @Inject(ENV) private readonly env: Env,
   ) {}
 
@@ -93,12 +97,18 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(AuthGuard)
-  me(
+  async me(
     @CurrentSession() session: ActiveSession,
     @Res({ passthrough: true }) res: Response,
-  ): SessionResponse {
+  ): Promise<SessionResponse> {
     res.setHeader('Cache-Control', 'no-store');
-    return { user: toPublicUser(session.user) };
+    return { user: await this.view.publicUser(session.user) };
+  }
+
+  /** Which sign-in methods this deployment offers, so the web app can show the right buttons. */
+  @Get('providers')
+  providers(): AuthProvidersResponse {
+    return { google: Boolean(this.env.GOOGLE_CLIENT_ID && this.env.GOOGLE_CLIENT_SECRET) };
   }
 
   /** Always succeeds and always clears the cookie, even if the session was already gone. */
@@ -117,22 +127,17 @@ export class AuthController {
     return { revoked: await this.sessions.revokeOthers(session.user.id, session.sessionId) };
   }
 
-  private startSession(res: Response, signedIn: SignedIn): SessionResponse {
+  private async startSession(res: Response, signedIn: SignedIn): Promise<SessionResponse> {
     res.cookie(SESSION_COOKIE, signedIn.session.token, {
       ...this.cookieOptions(),
       expires: signedIn.session.expiresAt,
     });
     res.setHeader('Cache-Control', 'no-store');
-    return { user: signedIn.user };
+    return { user: await this.view.publicUser(signedIn.user) };
   }
 
   private cookieOptions() {
-    return {
-      httpOnly: true,
-      secure: this.env.SESSION_COOKIE_SECURE,
-      sameSite: 'lax' as const,
-      path: '/',
-    };
+    return cookieOptions(this.env);
   }
 }
 

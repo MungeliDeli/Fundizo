@@ -3,13 +3,16 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { TogetherIllustration } from '@/components/illustrations/scenes';
 import { AuthShell } from '@/features/auth/auth-shell';
+import { GoogleButton, OrDivider } from '@/features/auth/google-button';
 import { SignupForm } from '@/features/auth/signup-form';
+import { getAuthProviders } from '@/lib/auth-providers';
 import { getCurrentUser } from '@/lib/session';
 
 export const metadata: Metadata = { title: 'Create your account' };
 
 export default async function SignupPage() {
   if (await getCurrentUser()) redirect('/account');
+  const { google } = await getAuthProviders();
   return (
     <AuthShell
       illustration={<TogetherIllustration />}
@@ -26,6 +29,12 @@ export default async function SignupPage() {
         </>
       }
     >
+      {google ? (
+        <>
+          <GoogleButton />
+          <OrDivider />
+        </>
+      ) : null}
       <SignupForm />
     </AuthShell>
   );

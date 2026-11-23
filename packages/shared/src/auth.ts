@@ -75,6 +75,8 @@ export const PublicUser = z.object({
   email: z.string(),
   emailVerified: z.boolean(),
   hasPassword: z.boolean(),
+  /** Signed in with Google before (A-12). */
+  googleLinked: z.boolean(),
   createdAt: z.iso.datetime(),
 });
 export type PublicUser = z.infer<typeof PublicUser>;
@@ -85,6 +87,24 @@ export type SessionResponse = z.infer<typeof SessionResponse>;
 /** Neutral reply for sign-up, resend and forgot-password (no account enumeration). */
 export const AcceptedResponse = z.object({ ok: z.literal(true) });
 export type AcceptedResponse = z.infer<typeof AcceptedResponse>;
+
+/** Which sign-in methods this deployment offers (Google needs credentials configured). */
+export const AuthProvidersResponse = z.object({ google: z.boolean() });
+export type AuthProvidersResponse = z.infer<typeof AuthProvidersResponse>;
+
+/**
+ * Why a Google sign-in didn't finish. The API redirects to /login?error=google_<reason>,
+ * and the login page turns the reason into words. Never free text in the URL.
+ */
+export const GoogleSignInError = z.enum([
+  'cancelled', // the person closed or declined Google's screen
+  'expired', // took too long, or the sign-in started in another browser
+  'unavailable', // Google sign-in isn't configured here
+  'email_unverified', // Google hasn't verified that email address
+  'in_use', // that Google account is already linked to another Fundizo account
+  'failed', // anything else
+]);
+export type GoogleSignInError = z.infer<typeof GoogleSignInError>;
 
 /** Header every state-changing request must send (CSRF defence, ADR 0004). */
 export const CSRF_HEADER = 'x-fundizo-csrf';

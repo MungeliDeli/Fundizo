@@ -15,6 +15,13 @@
       "when": 1795426920738,
       "tag": "0001_identity",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795436346850,
+      "tag": "0002_google_identities",
+      "breakpoints": true
     }
   ]
 }

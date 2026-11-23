@@ -34,7 +34,7 @@ The MVP is the **Phase 0 + Phase 1 "Must"** features from [FEATURES.md](features
 | --- | --- | --- | --- |
 | 0 ✅ | **Skeleton** | F-01, F-02 (CI), F-04 (local config) | Monorepo with `apps/api` (NestJS), `apps/web` (Next.js), `packages/shared`; Postgres and Redis in Docker; migrations wired up; GitHub Actions runs checks. A responsive web shell (desktop top bar, mobile bottom bar) shows "API connected". |
 | 1 ✅ | **Email sign-up and login** | A-01, A-03 | Sign up with name, email and password → 6-digit code by email (Brevo) → verified and logged in. Log in, log out, log out of other devices, forgot/set password. Responsive auth screens with illustrations; fluid type across the site. |
-| 2 | **Continue with Google** | A-12 | One-tap Google sign-in; links to an existing verified account with the same email. |
+| 2 ✅ | **Continue with Google** | A-12 | One-tap Google sign-in; links to an existing verified account with the same email. |
 | 3 | **Profile and phone** | A-02, A-13 | Edit name, district, language; add a phone number and verify it by SMS code (required before publishing). |
 | 3b | **Create and publish a campaign** | C-01, C-02, C-03, C-04, C-06, C-07 | The wizard saves each step to the server; publish (needs a verified phone); public campaign page with link previews (O-02). |
 | 4 | **Photos** | C-05 | Upload a cover and up to 10 photos (presigned uploads; MinIO locally, S3 later), compressed on the phone, EXIF stripped, shown on the page and in link previews. |

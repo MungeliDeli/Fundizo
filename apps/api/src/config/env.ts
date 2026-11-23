@@ -42,6 +42,14 @@ const EnvSchema = z
     BREVO_API_KEY: z.string().min(10).optional(),
     MAIL_FROM_EMAIL: z.email(),
     MAIL_FROM_NAME: z.string().min(1).default('Fundizo'),
+
+    /** Google sign-in (A-12). Both or neither; without them the "Continue with Google" button is hidden. */
+    GOOGLE_CLIENT_ID: z.string().min(10).optional(),
+    GOOGLE_CLIENT_SECRET: z.string().min(10).optional(),
+  })
+  .refine((e) => Boolean(e.GOOGLE_CLIENT_ID) === Boolean(e.GOOGLE_CLIENT_SECRET), {
+    path: ['GOOGLE_CLIENT_SECRET'],
+    message: 'set both GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET, or neither',
   })
   .refine((e) => e.NODE_ENV !== 'production' || e.BREVO_API_KEY, {
     path: ['BREVO_API_KEY'],

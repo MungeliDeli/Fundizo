@@ -36,7 +36,7 @@ Source of truth for what to build. IDs are stable: reference them in branches, c
 | A-08 | Notification settings | Choose SMS, push or email; opt out per campaign | Should | Everyone | Not started |
 | A-09 | Privacy controls | Download my data; delete my account (Data Protection Act) | Should | Everyone | Not started |
 | A-10 | Staff accounts | Admin, moderator, finance and support roles; 2FA required | Must | Staff | Not started |
-| A-12 | Sign in with Google | One-tap Google sign-in; links to an existing account with the same verified email | Must | Everyone | Not started |
+| A-12 | Sign in with Google | One-tap Google sign-in; links to an existing account with the same verified email | Must | Everyone | Done |
 | A-13 | Verify phone number | Add an MTN/Airtel number to the profile and verify it by SMS code; required before publishing | Must | Organisers | Not started |
 
 ### Campaigns

@@ -1,7 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import type {
   LoginRequest,
-  PublicUser,
   ResetPasswordRequest,
   SignupRequest,
   VerifyEmailRequest,
@@ -29,7 +28,7 @@ const RESET_TOKEN_TTL_MS = 30 * 60 * 1000;
 const MAX_CODE_ATTEMPTS = 5;
 
 export interface SignedIn {
-  user: PublicUser;
+  user: UserRow;
   session: { token: string; expiresAt: Date };
 }
 
@@ -149,7 +148,7 @@ export class AuthService {
         .where(eq(users.id, user.id))
         .returning();
       const session = await this.sessions.create(user.id, meta, tx);
-      return { user: toPublicUser(verified ?? user), session };
+      return { user: verified ?? user, session };
     });
   }
 
@@ -171,7 +170,7 @@ export class AuthService {
     }
 
     const session = await this.sessions.create(user.id, meta);
-    return { user: toPublicUser(user), session };
+    return { user, session };
   }
 
   async forgotPassword(email: string, meta: RequestMeta): Promise<void> {
@@ -250,7 +249,7 @@ export class AuthService {
         this.link('/forgot-password'),
       ),
     );
-    return { user: toPublicUser(result.user), session: result.session };
+    return { user: result.user, session: result.session };
   }
 
   private async sendVerificationCode(user: UserRow): Promise<void> {
@@ -322,16 +321,4 @@ export class AuthService {
   private to(user: UserRow) {
     return { email: user.email, name: `${user.firstName} ${user.lastName}` };
   }
-}
-
-export function toPublicUser(user: UserRow): PublicUser {
-  return {
-    id: user.id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    emailVerified: user.emailVerifiedAt !== null,
-    hasPassword: user.passwordHash !== null,
-    createdAt: user.createdAt.toISOString(),
-  };
 }

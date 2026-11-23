@@ -11,7 +11,13 @@ import { ApiError, apiPost, fieldErrors } from '@/lib/api';
 import { formError, rememberPendingEmail } from './error-messages';
 
 /** Log in with email and password (A-01, A-03). */
-export function LoginForm({ next }: { next: string }) {
+export function LoginForm({
+  next,
+  googleAvailable = false,
+}: {
+  next: string;
+  googleAvailable?: boolean;
+}) {
   const router = useRouter();
   const [values, setValues] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -71,6 +77,16 @@ export function LoginForm({ next }: { next: string }) {
       <Button type="submit" size="lg" loading={submitting} className="mt-1 w-full">
         Log in
       </Button>
+      {googleAvailable ? (
+        <p className="m-0 text-center text-sm text-ink-3">
+          Signed up with Google? Use{' '}
+          <strong className="font-semibold text-ink-2">Continue with Google</strong>, or{' '}
+          <Link href="/forgot-password" className="font-semibold text-accent-ink">
+            set a password
+          </Link>
+          .
+        </p>
+      ) : null}
     </form>
   );
 }

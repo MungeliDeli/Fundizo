@@ -18,7 +18,7 @@ A-07,Accounts,Account recovery,"A new phone or SIM needs an ID re-check, to stop
 A-08,Accounts,Notification settings,"Choose SMS, push or email; opt out per campaign",1,Should,Everyone,Not started
 A-09,Accounts,Privacy controls,Download my data; delete my account (Data Protection Act),1,Should,Everyone,Not started
 A-10,Accounts,Staff accounts,"Admin, moderator, finance and support roles; 2FA required",1,Must,Staff,Not started
-A-12,Accounts,Sign in with Google,One-tap Google sign-in; links to an existing account with the same verified email,1,Must,Everyone,Not started
+A-12,Accounts,Sign in with Google,One-tap Google sign-in; links to an existing account with the same verified email,1,Must,Everyone,Done
 A-13,Accounts,Verify phone number,Add an MTN/Airtel number to the profile and verify it by SMS code; required before publishing,1,Must,Organisers,Not started
 A-11,Accounts,Local languages,"Bemba, Nyanja and Tonga for key screens and SMS",2,Should,Everyone,Not started
 G-01,Groups and organisations,Create a group,"Name, type and photo; invite members by phone with an SMS or WhatsApp link",2,Must,Groups,Not started

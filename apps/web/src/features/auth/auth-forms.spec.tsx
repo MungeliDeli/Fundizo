@@ -21,6 +21,7 @@ const user = {
   email: 'mary@example.test',
   emailVerified: true,
   hasPassword: true,
+  googleLinked: false,
   createdAt: '2026-11-23T10:00:00.000Z',
 };
 
@@ -121,6 +122,15 @@ describe('LoginForm', () => {
     await u.click(screen.getByRole('button', { name: 'Log in' }));
     await waitFor(() => expect(router.replace).toHaveBeenCalledWith('/account'));
     expect(router.refresh).toHaveBeenCalled();
+  });
+
+  it('points Google users to Google or to setting a password', () => {
+    render(<LoginForm next="/account" googleAvailable />);
+    expect(screen.getByText(/Signed up with Google\?/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'set a password' })).toHaveAttribute(
+      'href',
+      '/forgot-password',
+    );
   });
 
   it('shows one generic message for a wrong password', async () => {

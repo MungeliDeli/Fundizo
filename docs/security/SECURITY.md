@@ -48,6 +48,7 @@ _Implemented in slice 1 ([ADR 0004](../architecture/decisions/0004-accounts-emai
 - **Sessions:** opaque 256-bit token in an `HttpOnly; Secure; SameSite=Lax` cookie (`fz_session`), 30 days; only its HMAC is stored. Logout revokes it server-side; "log out of other devices" revokes the rest (A-03). Never put tokens in `localStorage`.
 - **CSRF:** every state-changing request needs the `X-Fundizo-CSRF: 1` header (rejected otherwise); the API allows no CORS and the browser reaches it only through the same-origin `/api` proxy.
 - **Rate limits (Redis):** sign-up per IP; login per email and per IP; code resends per email; verification per email; forgot/reset per email and per IP. Rate-limit keys hash the email.
+- **Google sign-in (A-12):** authorization code flow with PKCE; `state` bound to the starting browser by an HttpOnly cookie and usable once; ID token verified (Google's keys, issuer, audience, expiry, nonce, `email_verified`). Accounts are matched by Google's `sub`. Email linking only joins a **confirmed** account; an unconfirmed account's password is discarded on takeover. Details: [A-12 feature doc](../features/A-12-google-signin.md#6-security--privacy).
 - Phone verification by SMS code (A-13) arrives in slice 3 under the same rules.
 - Staff: separate auth realm, **mandatory TOTP or WebAuthn**, shorter sessions, IP/geo anomaly alerts. Staff accounts are never also donor or organiser accounts.
 - Step-up OTP for sensitive actions: withdrawals, payout-wallet changes, adding co-organisers, account deletion.

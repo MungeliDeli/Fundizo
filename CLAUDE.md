@@ -10,7 +10,7 @@ Fundizo is a GoFundMe-style fundraising platform for Zambia. Donors pay with MTN
 
 ## Current state
 
-- **Phase 0 (Foundation). Docs only; no code yet.** The build order is in [docs/product/MVP-PLAN.md](docs/product/MVP-PLAN.md). Check it to see which slice is current.
+- **Building the MVP slice by slice.** The build order and which slices are done (✅) are in [docs/product/MVP-PLAN.md](docs/product/MVP-PLAN.md). Shipped so far: skeleton (API, web, CI), email accounts, Google sign-in. Each shipped feature has a doc in [docs/features/](docs/features/).
 - **Work one slice at a time, end to end** (DB → API → web UI → tests → docs). Never build the whole frontend first and wire the backend later. Never start the next slice before the user has seen the current one running and said OK.
 - **Per slice:** build it on `feat/<ID>-<name>`. When it works end to end and every check passes, **merge it to `main` yourself** (pre-approved by the user) and push. Then give the user (1) a plain-language explanation of the feature and (2) exactly where to see it (the running link and what to click). Wait for their OK before starting the next slice.
 - Ask first only for decisions that are genuinely the user's (product choices, money rules, providers, costs).
@@ -114,7 +114,7 @@ pnpm db:generate                  # schema change → new SQL migration (review 
 pnpm format                       # prettier
 ```
 
-Local settings: `apps/api/.env` (git-ignored; template `apps/api/.env.example`) holds `WEB_BASE_URL`, `AUTH_SECRET` and the Brevo key. Without a Brevo key, emails appear at `/dev/outbox` (dev only). Brevo setup: [A-01 feature doc → Setting up Brevo](docs/features/A-01-email-signup.md#setting-up-brevo).
+Local settings: `apps/api/.env` (git-ignored; template `apps/api/.env.example`) holds `WEB_BASE_URL`, `AUTH_SECRET`, the Brevo key and the Google client id and secret (setup: [A-12 doc](docs/features/A-12-google-signin.md#setting-up-google-sign-in)). Put settings there, not in shell variables: Turborepo filters undeclared env vars out of `pnpm dev`. Without a Brevo key, emails appear at `/dev/outbox` (dev only). Brevo setup: [A-01 feature doc → Setting up Brevo](docs/features/A-01-email-signup.md#setting-up-brevo).
 
 Layout: `apps/api` (NestJS 12, ESM: relative imports end in `.js`; modules in `src/modules/<name>/`; infra in `src/infra/`; Drizzle schema in `src/db/schema/`, migrations in `src/db/migrations/`), `apps/web` (Next.js 16; routes in `src/app/` stay thin, product code in `src/features/<area>/`, primitives in `src/components/`, API client in `src/lib/api.ts`), `packages/shared` (Zod contracts; **define every request/response shape here first**). Tooling decisions: [ADR 0003](docs/architecture/decisions/0003-slice-0-tooling.md).
 

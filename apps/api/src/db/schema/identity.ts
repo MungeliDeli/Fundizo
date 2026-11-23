@@ -87,5 +87,30 @@ export const oneTimeTokens = pgTable(
   ],
 );
 
+/**
+ * External sign-in accounts linked to a user (A-12). One Google account links to at most one
+ * Fundizo user (unique provider + subject). The subject is Google's stable "sub", never the email.
+ */
+export const userIdentities = pgTable(
+  'user_identities',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    provider: text('provider', { enum: ['google'] }).notNull(),
+    subject: text('subject').notNull(),
+    /** The provider's email when linked, for support and audit; sign-in never matches on it. */
+    email: text('email').notNull(),
+    ...timestamps,
+  },
+  (t) => [
+    uniqueIndex('user_identities_provider_subject_key').on(t.provider, t.subject),
+    uniqueIndex('user_identities_user_provider_key').on(t.userId, t.provider),
+    check('user_identities_provider_check', sql`${t.provider} in ('google')`),
+  ],
+);
+
 export type UserRow = typeof users.$inferSelect;
 export type SessionRow = typeof sessions.$inferSelect;
+export type UserIdentityRow = typeof userIdentities.$inferSelect;
