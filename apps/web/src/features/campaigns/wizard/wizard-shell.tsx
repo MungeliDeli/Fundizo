@@ -52,7 +52,8 @@ export function WizardShell({
         </Link>
       </div>
       <div
-        className="mt-3 grid grid-cols-5 gap-1.5 lg:hidden"
+        className="mt-3 grid gap-1.5 lg:hidden"
+        style={{ gridTemplateColumns: `repeat(${WIZARD_STEPS.length}, minmax(0, 1fr))` }}
         role="progressbar"
         aria-label="Fundraiser setup progress"
         aria-valuemin={1}

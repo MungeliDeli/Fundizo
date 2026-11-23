@@ -16,7 +16,11 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   async rewrites() {
-    return [{ source: '/api/:path*', destination: `${API_INTERNAL_URL}/:path*` }];
+    return [
+      { source: '/api/:path*', destination: `${API_INTERNAL_URL}/:path*` },
+      // Photos: served by the API from local storage in development; S3 + CDN in production (slice 7).
+      { source: '/media/:path*', destination: `${API_INTERNAL_URL}/media/:path*` },
+    ];
   },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];

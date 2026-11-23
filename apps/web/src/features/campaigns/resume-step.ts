@@ -11,5 +11,6 @@ export function resumeStep(c: OwnCampaign): WizardStep {
     c.story.moneyFor.trim().length < 10
   )
     return 'story';
+  if (c.photos.length === 0) return 'photos';
   return 'review';
 }

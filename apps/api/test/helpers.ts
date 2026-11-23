@@ -1,3 +1,5 @@
+import { rm } from 'node:fs/promises';
+import sharp from 'sharp';
 import type { INestApplication } from '@nestjs/common';
 import { Test, type TestingModuleBuilder } from '@nestjs/testing';
 import { CSRF_HEADER } from '@fundizo/shared';
@@ -32,12 +34,25 @@ export async function resetData() {
   const client = new pg.Client({ connectionString: dbUrl });
   await client.connect();
   await client.query(
-    'truncate users, sessions, one_time_tokens, user_identities, campaigns, campaign_beneficiaries cascade',
+    'truncate users, sessions, one_time_tokens, user_identities, campaigns, campaign_beneficiaries, campaign_media cascade',
   );
   await client.end();
   const redis = new Redis(redisUrl);
   await redis.flushdb();
   redis.disconnect();
+  const storage = process.env.STORAGE_LOCAL_DIR ?? '';
+  if (storage.includes('fundizo-test-storage')) await rm(storage, { recursive: true, force: true });
+}
+
+/** A real JPEG, made in memory (with EXIF, so tests can prove it's stripped). */
+export async function testJpeg(width = 1200, height = 900): Promise<Buffer> {
+  return sharp({ create: { width, height, channels: 3, background: { r: 180, g: 83, b: 42 } } })
+    .jpeg()
+    .withExif({
+      IFD0: { Make: 'TestPhone' },
+      IFD3: { GPSLatitudeRef: 'S', GPSLatitude: '14/1 26/1 0/1' },
+    })
+    .toBuffer();
 }
 
 /** Read the dev outbox (newest first). */

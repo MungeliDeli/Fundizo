@@ -3,10 +3,12 @@ import {
   CampaignDraftUpdate,
   CreateCampaignRequest,
   PublicCampaign,
+  UpdatePhotoRequest,
   publishProblems,
 } from './campaigns.js';
 
 const ready = {
+  photos: [{}],
   category: 'medical' as const,
   goalNgwee: 6_000_000,
   title: 'Help Mary get her heart surgery',
@@ -71,16 +73,27 @@ describe('publishProblems', () => {
         goalNgwee: null,
         title: '',
         story: { whatHappened: '', moneyFor: '', extra: '' },
+        photos: [],
       },
       { emailVerified: true, phoneVerified: false },
     ).map((p) => p.step);
-    expect(steps).toEqual(['category', 'goal', 'story', 'story', 'story', 'account']);
+    expect(steps).toEqual(['category', 'goal', 'story', 'story', 'story', 'photos', 'account']);
   });
 
   it('lets funerals skip the goal', () => {
     expect(publishProblems({ ...ready, category: 'funeral', goalNgwee: null }, verified)).toEqual(
       [],
     );
+  });
+});
+
+describe('UpdatePhotoRequest', () => {
+  it('accepts one change at a time and nothing unexpected', () => {
+    expect(UpdatePhotoRequest.parse({ sensitive: true })).toEqual({ sensitive: true });
+    expect(UpdatePhotoRequest.parse({ cover: true })).toEqual({ cover: true });
+    expect(UpdatePhotoRequest.safeParse({}).success).toBe(false);
+    expect(UpdatePhotoRequest.safeParse({ cover: false }).success).toBe(false);
+    expect(UpdatePhotoRequest.safeParse({ url: 'https://evil.test/x.webp' }).success).toBe(false);
   });
 });
 

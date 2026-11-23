@@ -3,6 +3,7 @@ export const WIZARD_STEPS = [
   { id: 'category', label: 'What it’s for' },
   { id: 'goal', label: 'Goal and place' },
   { id: 'story', label: 'Story' },
+  { id: 'photos', label: 'Photos' },
   { id: 'review', label: 'Review and publish' },
 ] as const;
 

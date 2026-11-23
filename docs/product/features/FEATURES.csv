@@ -32,7 +32,7 @@ C-01,Campaigns,Creation wizard,6 steps with a progress bar and autosave at every
 C-02,Campaigns,Beneficiary choice,"Raise for myself or for someone else (name, phone, relationship)",1,Must,Organisers,Done
 C-03,Campaigns,Categories,"Medical, Funeral, Education, Emergency, Community, Event, Other",1,Must,Organisers,Done
 C-04,Campaigns,Story editor,"Title plus guided prompts (who, what happened, what the money is for, by when) with live preview",1,Must,Organisers,Done
-C-05,Campaigns,Photo upload,Cover photo plus up to 10; compressed on the phone; option to blur sensitive images,1,Must,Organisers,Not started
+C-05,Campaigns,Photo upload,Cover photo plus up to 10; compressed on the phone; option to blur sensitive images,1,Must,Organisers,Done
 C-06,Campaigns,Goal and end date,"Goal in ZMW (keep what you raise), optional end date, goal can be raised later",1,Must,Organisers,In progress
 C-07,Campaigns,Preview and publish,Preview as donors and WhatsApp will see it; publishing makes it live at once,1,Must,Organisers,Done
 C-08,Campaigns,Co-organisers,"Up to 3 helpers who can share, post updates and thank donors, but not withdraw",1,Should,Organisers,Not started

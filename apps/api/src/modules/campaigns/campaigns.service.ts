@@ -3,6 +3,7 @@ import {
   type Beneficiary,
   type CampaignDraftUpdate,
   type OwnCampaign,
+  type Photo,
   type PublicCampaign,
   publishProblems,
 } from '@fundizo/shared';
@@ -17,6 +18,7 @@ import {
 } from '../../db/schema/index.js';
 import { DB, type Database } from '../../infra/database/database.module.js';
 import { UserDirectory } from '../identity/user-directory.service.js';
+import { CampaignPhotosRepository } from './campaign-photos.repository.js';
 import { campaignType } from './campaign-types.js';
 import { makeSlug } from './slugs.js';
 
@@ -33,6 +35,7 @@ export class CampaignsService {
     @Inject(DB) private readonly db: Database,
     private readonly users: UserDirectory,
     private readonly limiter: RateLimiter,
+    private readonly photos: CampaignPhotosRepository,
   ) {}
 
   async create(ownerId: string, beneficiary: Beneficiary): Promise<OwnCampaign> {
@@ -51,7 +54,7 @@ export class CampaignsService {
         .values({ campaignId: campaign.id, ...beneficiaryColumns(beneficiary) })
         .returning();
       if (!row) throw new Error('insert failed');
-      return toOwn(campaign, row);
+      return toOwn(campaign, row, []);
     });
   }
 
@@ -62,24 +65,25 @@ export class CampaignsService {
       .innerJoin(campaignBeneficiaries, eq(campaignBeneficiaries.campaignId, campaigns.id))
       .where(eq(campaigns.ownerUserId, ownerId))
       .orderBy(desc(campaigns.updatedAt));
-    return rows.map((r) => toOwn(r.campaign, r.beneficiary));
+    const photos = await this.photos.listFor(rows.map((r) => r.campaign.id));
+    return rows.map((r) => toOwn(r.campaign, r.beneficiary, photos.get(r.campaign.id) ?? []));
   }
 
   async getOwn(ownerId: string, id: string): Promise<OwnCampaign> {
     const { campaign, beneficiary } = await this.loadOwn(ownerId, id);
-    return toOwn(campaign, beneficiary);
+    return toOwn(campaign, beneficiary, await this.photos.list(id));
+  }
+
+  /** For photo changes and other draft edits: the session user's own campaign, still a draft. */
+  async requireOwnDraft(ownerId: string, id: string): Promise<void> {
+    const { campaign } = await this.loadOwn(ownerId, id);
+    if (campaign.status !== 'draft') throw liveCampaignError();
   }
 
   /** Autosave from the wizard. Drafts only for now: editing a live fundraiser comes with re-verification (V-07). */
   async update(ownerId: string, id: string, patch: CampaignDraftUpdate): Promise<OwnCampaign> {
     const { campaign } = await this.loadOwn(ownerId, id);
-    if (campaign.status !== 'draft') {
-      throw new AppError(
-        'validation_failed',
-        409,
-        'This fundraiser is live. Editing a live fundraiser comes soon.',
-      );
-    }
+    if (campaign.status !== 'draft') throw liveCampaignError();
     await this.db.transaction(async (tx) => {
       const { beneficiary, ...fields } = patch;
       if (Object.keys(fields).length > 0) {
@@ -104,11 +108,12 @@ export class CampaignsService {
    */
   async publish(ownerId: string, id: string): Promise<OwnCampaign> {
     const { campaign, beneficiary } = await this.loadOwn(ownerId, id);
-    if (campaign.status === 'published') return toOwn(campaign, beneficiary);
+    const photos = await this.photos.list(id);
+    if (campaign.status === 'published') return toOwn(campaign, beneficiary, photos);
     const owner = await this.users.get(ownerId);
     if (!owner) throw Errors.unauthenticated();
 
-    const own = toOwn(campaign, beneficiary);
+    const own = toOwn(campaign, beneficiary, photos);
     const problems = publishProblems(own, {
       emailVerified: owner.emailVerified,
       phoneVerified: owner.phoneVerified,
@@ -129,7 +134,7 @@ export class CampaignsService {
           .set({ status: 'published', slug: makeSlug(campaign.title), publishedAt: new Date() })
           .where(and(eq(campaigns.id, id), eq(campaigns.status, 'draft')))
           .returning();
-        if (published) return toOwn(published, beneficiary);
+        if (published) return toOwn(published, beneficiary, photos);
         return this.getOwn(ownerId, id); // published meanwhile (double click)
       } catch (err) {
         if (!isUniqueViolation(err)) throw err;
@@ -171,6 +176,7 @@ export class CampaignsService {
           : null,
       verified: c.verificationStatus === 'verified',
       publishedAt: row.campaign.publishedAt.toISOString(),
+      photos: await this.photos.list(c.id),
     };
   }
 
@@ -200,7 +206,7 @@ function beneficiaryColumns(b: Beneficiary) {
       };
 }
 
-function toOwn(c: CampaignRow, b: CampaignBeneficiaryRow): OwnCampaign {
+function toOwn(c: CampaignRow, b: CampaignBeneficiaryRow, photos: Photo[]): OwnCampaign {
   return {
     id: c.id,
     status: c.status,
@@ -223,7 +229,16 @@ function toOwn(c: CampaignRow, b: CampaignBeneficiaryRow): OwnCampaign {
     district: c.district,
     publishedAt: c.publishedAt?.toISOString() ?? null,
     updatedAt: c.updatedAt.toISOString(),
+    photos,
   };
+}
+
+function liveCampaignError() {
+  return new AppError(
+    'validation_failed',
+    409,
+    'This fundraiser is live. Editing a live fundraiser comes soon.',
+  );
 }
 
 function isUniqueViolation(err: unknown): boolean {

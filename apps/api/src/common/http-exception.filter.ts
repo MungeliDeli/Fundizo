@@ -28,6 +28,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
         body: { error: { code: exception.code, message: exception.message, ...exception.extra } },
       };
     }
+    // Body-parser errors (e.g. a photo over the size limit) carry a status but aren't HttpExceptions.
+    const parserStatus =
+      typeof exception === 'object' && exception !== null && 'status' in exception
+        ? Number(exception.status)
+        : null;
+    if (parserStatus === 413) {
+      return {
+        status: 413,
+        body: {
+          error: { code: 'bad_image', message: 'That photo is too big. Use one under 8 MB.' },
+        },
+      };
+    }
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
       if (status === 404)

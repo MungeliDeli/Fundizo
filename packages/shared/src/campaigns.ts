@@ -33,6 +33,36 @@ export const STORY_PART_MAX = 3000;
 export const GOAL_MIN = kwachaToNgwee(100);
 export const GOAL_MAX = kwachaToNgwee(10_000_000);
 
+/** Photos (C-05). The first photo is the cover. */
+export const PHOTO_MAX = 10;
+export const PHOTO_MAX_BYTES = 8 * 1024 * 1024;
+export const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
+
+/**
+ * A processed photo: re-encoded on the server (WebP, location data removed). `blurUrl` is always
+ * available; pages show it instead of the photo when `sensitive` is set (graphic medical images).
+ */
+export const Photo = z.object({
+  id: z.uuid(),
+  url: z.string(),
+  thumbUrl: z.string(),
+  blurUrl: z.string(),
+  sensitive: z.boolean(),
+  width: z.number().int().positive(),
+  height: z.number().int().positive(),
+});
+export type Photo = z.infer<typeof Photo>;
+
+/** PATCH /campaigns/:id/photos/:photoId: mark as sensitive, or make it the cover. */
+export const UpdatePhotoRequest = z
+  .object({ sensitive: z.boolean(), cover: z.literal(true) })
+  .partial()
+  .strict()
+  .refine((v) => Object.keys(v).length > 0, { message: 'Nothing to change.' });
+export type UpdatePhotoRequest = z.infer<typeof UpdatePhotoRequest>;
+
+export const PhotoListResponse = z.object({ photos: z.array(Photo) });
+
 export const Beneficiary = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('self') }).strict(),
   z
@@ -116,6 +146,8 @@ export const OwnCampaign = z.object({
   district: z.string().nullable(),
   publishedAt: z.iso.datetime().nullable(),
   updatedAt: z.iso.datetime(),
+  /** In display order; the first is the cover. */
+  photos: z.array(Photo),
 });
 export type OwnCampaign = z.infer<typeof OwnCampaign>;
 
@@ -124,14 +156,14 @@ export const OwnCampaignList = z.object({ campaigns: z.array(OwnCampaign) });
 
 /** Why a draft can't be published yet, keyed by wizard step, so the review screen can link to it. */
 export const PublishProblem = z.object({
-  step: z.enum(['who', 'category', 'goal', 'story', 'account']),
+  step: z.enum(['who', 'category', 'goal', 'story', 'photos', 'account']),
   message: z.string(),
 });
 export type PublishProblem = z.infer<typeof PublishProblem>;
 
 /** What publishing requires (C-07). Returns the problems, empty when ready. */
 export function publishProblems(
-  c: Pick<OwnCampaign, 'category' | 'goalNgwee' | 'title' | 'story'>,
+  c: Pick<OwnCampaign, 'category' | 'goalNgwee' | 'title' | 'story'> & { photos: unknown[] },
   organiser: { emailVerified: boolean; phoneVerified: boolean },
 ): PublishProblem[] {
   const problems: PublishProblem[] = [];
@@ -148,6 +180,7 @@ export function publishProblems(
     });
   if (c.story.moneyFor.trim().length < 10)
     problems.push({ step: 'story', message: 'Say what the money will pay for.' });
+  if (c.photos.length === 0) problems.push({ step: 'photos', message: 'Add a cover photo.' });
   if (!organiser.emailVerified || !organiser.phoneVerified)
     problems.push({
       step: 'account',
@@ -173,6 +206,8 @@ export const PublicCampaign = z.object({
   beneficiary: z.object({ name: z.string(), relationship: z.string() }).nullable(),
   verified: z.boolean(),
   publishedAt: z.iso.datetime(),
+  /** In display order; the first is the cover. Empty for fundraisers published before photos existed. */
+  photos: z.array(Photo),
 });
 export type PublicCampaign = z.infer<typeof PublicCampaign>;
 export const PublicCampaignResponse = z.object({ campaign: PublicCampaign });

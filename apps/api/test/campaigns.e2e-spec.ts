@@ -8,7 +8,15 @@ import {
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { browser, codeFrom, createTestApp, lastEmailTo, lastSmsTo, resetData } from './helpers.js';
+import {
+  browser,
+  codeFrom,
+  createTestApp,
+  lastEmailTo,
+  lastSmsTo,
+  resetData,
+  testJpeg,
+} from './helpers.js';
 
 // Create and publish a fundraiser (C-01 – C-07), end to end against real Postgres + Redis.
 
@@ -62,6 +70,16 @@ const complete = {
     extra: '',
   },
 };
+/** Fill in every step and add a cover photo, so only account checks remain. */
+async function makeReady(b: B, id: string, extra: object = {}) {
+  await patch(b, id, { ...complete, ...extra }).expect(200);
+  await b.agent
+    .post(`/campaigns/${id}/photos`)
+    .set('x-fundizo-csrf', '1')
+    .set('Content-Type', 'image/jpeg')
+    .send(await testJpeg())
+    .expect(201);
+}
 const forJoseph = {
   kind: 'someone_else',
   name: 'Joseph Banda',
@@ -168,13 +186,19 @@ describe('publishing', () => {
     const c = await draft(b);
     const err = errorOf(await b.post(`/campaigns/${c.id}/publish`).expect(422));
     expect(err.code).toBe('not_publishable');
-    expect(Object.keys(err.fields ?? {})).toEqual(['category', 'goal', 'story', 'account']);
+    expect(Object.keys(err.fields ?? {})).toEqual([
+      'category',
+      'goal',
+      'story',
+      'photos',
+      'account',
+    ]);
   });
 
   it('needs a confirmed phone, even when everything else is ready', async () => {
     const b = await person();
     const c = await draft(b);
-    await patch(b, c.id, complete).expect(200);
+    await makeReady(b, c.id);
     expect(errorOf(await b.post(`/campaigns/${c.id}/publish`).expect(422)).fields).toEqual({
       account: 'Confirm your phone number on your profile before publishing.',
     });
@@ -192,7 +216,7 @@ describe('publishing', () => {
       },
     });
     const c = await draft(b);
-    await patch(b, c.id, complete).expect(200);
+    await makeReady(b, c.id);
     const published = own(await b.post(`/campaigns/${c.id}/publish`).expect(200));
     expect(published.status).toBe('published');
     expect(published.slug).toMatch(/^help-joseph-get-his-heart-surgery-at-uth-[2-9a-z]{4}$/);
@@ -213,13 +237,14 @@ describe('publishing', () => {
     });
     const text = JSON.stringify(res.body);
     expect(text).not.toMatch(/\+260|0971234567|0961234567|@example\.test/);
-    expect(text).not.toMatch(/ownerUserId|"id"/);
+    expect(text).not.toMatch(/ownerUserId/);
+    expect(text).not.toContain(c.id); // the internal campaign id stays private
   });
 
   it('publishing twice is harmless; live fundraisers can’t be edited yet', async () => {
     const b = await person({ phone: '0961234567' });
     const c = await draft(b);
-    await patch(b, c.id, complete).expect(200);
+    await makeReady(b, c.id);
     const first = own(await b.post(`/campaigns/${c.id}/publish`).expect(200));
     const second = own(await b.post(`/campaigns/${c.id}/publish`).expect(200));
     expect(second.slug).toBe(first.slug);
@@ -229,7 +254,7 @@ describe('publishing', () => {
   it('lets funerals publish without a goal', async () => {
     const b = await person({ phone: '0961234567' });
     const c = await draft(b, { kind: 'self' });
-    await patch(b, c.id, { ...complete, category: 'funeral', goalNgwee: null }).expect(200);
+    await makeReady(b, c.id, { category: 'funeral', goalNgwee: null });
     await b.post(`/campaigns/${c.id}/publish`).expect(200);
   });
 
@@ -238,7 +263,7 @@ describe('publishing', () => {
     const slugs = new Set<string | null>();
     for (let i = 0; i < 3; i++) {
       const c = await draft(b);
-      await patch(b, c.id, complete).expect(200);
+      await makeReady(b, c.id);
       slugs.add(own(await b.post(`/campaigns/${c.id}/publish`).expect(200)).slug);
     }
     expect(slugs.size).toBe(3);

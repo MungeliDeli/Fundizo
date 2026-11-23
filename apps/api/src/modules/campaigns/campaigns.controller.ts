@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
   Patch,
   Post,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -13,12 +15,15 @@ import {
   CampaignDraftUpdate,
   CreateCampaignRequest,
   type OwnCampaign,
+  type Photo,
   type PublicCampaign,
+  UpdatePhotoRequest,
 } from '@fundizo/shared';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { AuthGuard, CurrentSession } from '../identity/auth.guard.js';
 import type { ActiveSession } from '../identity/sessions.service.js';
+import { CampaignPhotosService } from './campaign-photos.service.js';
 import { CampaignsService } from './campaigns.service.js';
 
 const CampaignId = z.uuid();
@@ -28,7 +33,43 @@ const Slug = z.string().regex(/^[a-z0-9-]{3,80}$/);
 @Controller('campaigns')
 @UseGuards(AuthGuard)
 export class CampaignsController {
-  constructor(private readonly campaigns: CampaignsService) {}
+  constructor(
+    private readonly campaigns: CampaignsService,
+    private readonly photos: CampaignPhotosService,
+  ) {}
+
+  /**
+   * Upload one photo as the raw request body (Content-Type image/jpeg, png or webp; 8 MB max).
+   * The server re-encodes it and stores only the cleaned WebP versions (C-05, ADR 0005).
+   */
+  @Post(':id/photos')
+  @HttpCode(201)
+  async addPhoto(
+    @CurrentSession() s: ActiveSession,
+    @Param('id', { schema: CampaignId }) id: string,
+    @Req() req: Request,
+  ): Promise<{ photos: Photo[] }> {
+    return { photos: await this.photos.add(s.user.id, id, req.body as unknown) };
+  }
+
+  @Patch(':id/photos/:photoId')
+  async updatePhoto(
+    @CurrentSession() s: ActiveSession,
+    @Param('id', { schema: CampaignId }) id: string,
+    @Param('photoId', { schema: CampaignId }) photoId: string,
+    @Body({ schema: UpdatePhotoRequest }) body: UpdatePhotoRequest,
+  ): Promise<{ photos: Photo[] }> {
+    return { photos: await this.photos.update(s.user.id, id, photoId, body) };
+  }
+
+  @Delete(':id/photos/:photoId')
+  async removePhoto(
+    @CurrentSession() s: ActiveSession,
+    @Param('id', { schema: CampaignId }) id: string,
+    @Param('photoId', { schema: CampaignId }) photoId: string,
+  ): Promise<{ photos: Photo[] }> {
+    return { photos: await this.photos.remove(s.user.id, id, photoId) };
+  }
 
   @Post()
   @HttpCode(201)

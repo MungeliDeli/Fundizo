@@ -44,6 +44,29 @@ export function apiPatch<S extends z.ZodType>(
   return send('PATCH', path, body, schema, init);
 }
 
+export function apiDelete<S extends z.ZodType>(path: string, schema: S, init?: Options) {
+  return request(path, schema, {
+    ...init,
+    method: 'DELETE',
+    headers: { [CSRF_HEADER]: '1', ...init?.headers },
+  });
+}
+
+/** Upload a file as the raw request body (photos, C-05). */
+export function apiUpload<S extends z.ZodType>(
+  path: string,
+  file: Blob,
+  schema: S,
+  init?: Options,
+) {
+  return request(path, schema, {
+    ...init,
+    method: 'POST',
+    body: file,
+    headers: { 'Content-Type': file.type, [CSRF_HEADER]: '1', ...init?.headers },
+  });
+}
+
 /** State changes always carry JSON and the CSRF header (ADR 0004). */
 function send<S extends z.ZodType>(
   method: 'POST' | 'PATCH',

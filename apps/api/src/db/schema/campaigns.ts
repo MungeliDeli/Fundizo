@@ -1,9 +1,11 @@
 import { sql } from 'drizzle-orm';
 import {
   bigint,
+  boolean,
   check,
   date,
   index,
+  integer,
   jsonb,
   pgTable,
   text,
@@ -103,5 +105,27 @@ export const campaignBeneficiaries = pgTable(
   ],
 );
 
+/**
+ * Photos (C-05). Only processed WebP versions are stored (w1200, w400, blur) under
+ * `photos/<photoId>/`; the original upload is never kept. Lowest `sort` = cover.
+ */
+export const campaignMedia = pgTable(
+  'campaign_media',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    campaignId: uuid('campaign_id')
+      .notNull()
+      .references(() => campaigns.id, { onDelete: 'cascade' }),
+    width: integer('width').notNull(),
+    height: integer('height').notNull(),
+    /** Graphic or private medical images: shown blurred until a viewer chooses to see them. */
+    sensitive: boolean('sensitive').notNull().default(false),
+    sort: integer('sort').notNull(),
+    ...timestamps,
+  },
+  (t) => [index('campaign_media_campaign_idx').on(t.campaignId, t.sort)],
+);
+
 export type CampaignRow = typeof campaigns.$inferSelect;
 export type CampaignBeneficiaryRow = typeof campaignBeneficiaries.$inferSelect;
+export type CampaignMediaRow = typeof campaignMedia.$inferSelect;

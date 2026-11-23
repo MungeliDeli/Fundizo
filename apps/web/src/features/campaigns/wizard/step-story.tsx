@@ -3,6 +3,7 @@
 import {
   CAMPAIGN_TITLE_MAX,
   type CampaignCategory,
+  type Photo,
   CampaignDraftUpdate,
   STORY_MIN,
   type Story,
@@ -14,8 +15,8 @@ import { Button } from '@/components/ui/button';
 import { TextField } from '@/components/ui/text-field';
 import { fieldErrors } from '@/lib/api';
 import { cn } from '@/lib/cn';
-import { CategoryCover } from '../category-cover';
-import { stepHref } from './steps';
+import { CampaignCover } from '../campaign-cover';
+import { nextStep, stepHref } from './steps';
 import { useSaveDraft } from './use-save-draft';
 
 const PROMPTS: ReadonlyArray<{
@@ -53,7 +54,7 @@ export function StepStory({
 }: {
   campaignId: string;
   category: CampaignCategory | null;
-  initial: { title: string; story: Story };
+  initial: { title: string; story: Story; photos?: Photo[] };
 }) {
   const router = useRouter();
   const draft = useSaveDraft(campaignId);
@@ -75,7 +76,7 @@ export function StepStory({
       return;
     }
     setErrors({});
-    if (await draft.save(parsed.data)) router.push(stepHref(campaignId, 'review'));
+    if (await draft.save(parsed.data)) router.push(stepHref(campaignId, nextStep('story')));
   }
 
   return (
@@ -151,11 +152,13 @@ export function StepStory({
             Preview
           </p>
           <div className="overflow-hidden rounded-card border border-line bg-surface">
-            {category ? (
-              <CategoryCover category={category} compact className="h-28" />
-            ) : (
-              <div className="h-28 bg-sunk" />
-            )}
+            <CampaignCover
+              photo={initial.photos?.[0]}
+              category={category}
+              alt={title}
+              compact
+              className="h-28"
+            />
             <div className="flex flex-col gap-2 p-4">
               <p className="display m-0 text-lg leading-snug">{title || 'Your title'}</p>
               <p className="m-0 line-clamp-6 text-sm text-ink-2">

@@ -54,6 +54,15 @@ const EnvSchema = z
       .regex(/^[A-Za-z0-9]{1,11}$/)
       .default('Fundizo'),
 
+    /**
+     * Where processed photos are stored (C-05). 'local' = a git-ignored folder, served by the API in
+     * development. 's3' arrives with AWS (slice 7); production refuses to start until then.
+     */
+    STORAGE_DRIVER: z.enum(['local', 's3']).default('local'),
+    STORAGE_LOCAL_DIR: z.string().min(1).default('.storage'),
+    /** Public base URL for photos (the CDN in production). Defaults to the relative /media (proxied to the API in dev). */
+    MEDIA_PUBLIC_BASE_URL: z.url({ protocol: /^https?$/ }).optional(),
+
     /** Google sign-in (A-12). Both or neither; without them the "Continue with Google" button is hidden. */
     GOOGLE_CLIENT_ID: z.string().min(10).optional(),
     GOOGLE_CLIENT_SECRET: z.string().min(10).optional(),
@@ -69,6 +78,10 @@ const EnvSchema = z
   .refine((e) => e.NODE_ENV !== 'production' || e.SMS_TRANSPORT === 'brevo', {
     path: ['SMS_TRANSPORT'],
     message: 'must be brevo in production',
+  })
+  .refine((e) => e.NODE_ENV !== 'production' || e.STORAGE_DRIVER === 's3', {
+    path: ['STORAGE_DRIVER'],
+    message: 'must be s3 in production',
   })
   .refine((e) => e.NODE_ENV !== 'production' || e.BREVO_API_KEY, {
     path: ['BREVO_API_KEY'],

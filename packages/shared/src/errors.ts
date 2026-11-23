@@ -15,6 +15,8 @@ export const ErrorCode = z.enum([
   'phone_in_use',
   'sms_failed',
   'not_publishable',
+  'bad_image',
+  'too_many_photos',
   'not_found',
   'internal_error',
 ]);

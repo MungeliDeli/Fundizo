@@ -23,6 +23,7 @@ describe('parseEnv', () => {
     BREVO_API_KEY: 'xkeysib-test-key',
     MAIL_FROM_EMAIL: 'no-reply@fundizo.example',
     SMS_TRANSPORT: 'brevo',
+    STORAGE_DRIVER: 's3',
   };
 
   it('accepts complete production config', () => {
@@ -41,6 +42,10 @@ describe('parseEnv', () => {
 
   it('needs a Brevo key before sending real SMS', () => {
     expect(() => parseEnv({ SMS_TRANSPORT: 'brevo' })).toThrow(/BREVO_API_KEY/);
+  });
+
+  it('never stores photos on local disk in production', () => {
+    expect(() => parseEnv({ ...production, STORAGE_DRIVER: 'local' })).toThrow(/STORAGE_DRIVER/);
   });
 
   it('refuses the dev secret in production', () => {

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { TogetherIllustration } from '@/components/illustrations/scenes';
 import { buttonClasses } from '@/components/ui/button';
-import { CategoryCover } from '@/features/campaigns/category-cover';
+import { CampaignCover } from '@/features/campaigns/campaign-cover';
 import { resumeStep } from '@/features/campaigns/resume-step';
 import { stepHref } from '@/features/campaigns/wizard/steps';
 import { serverGet } from '@/lib/server-api';
@@ -61,11 +61,13 @@ export default async function FundraisersPage() {
                 key={c.id}
                 className="flex flex-col overflow-hidden rounded-card border border-line bg-surface"
               >
-                {c.category ? (
-                  <CategoryCover category={c.category} compact className="h-32" />
-                ) : (
-                  <div className="h-32 bg-sunk" />
-                )}
+                <CampaignCover
+                  photo={c.photos[0]}
+                  category={c.category}
+                  alt={c.title || 'Draft'}
+                  compact
+                  className="h-32"
+                />
                 <div className="flex flex-1 flex-col gap-3 p-5">
                   <div className="flex flex-wrap items-center gap-2">
                     <span

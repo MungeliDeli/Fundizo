@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { StepCategory } from '@/features/campaigns/wizard/step-category';
 import { StepGoal } from '@/features/campaigns/wizard/step-goal';
+import { StepPhotos } from '@/features/campaigns/wizard/step-photos';
 import { StepReview } from '@/features/campaigns/wizard/step-review';
 import { StepStory } from '@/features/campaigns/wizard/step-story';
 import { StepWho } from '@/features/campaigns/wizard/step-who';
@@ -78,6 +79,26 @@ export default async function WizardStepPage({ params }: { params: Promise<Param
           subtitle="Answer a few questions. Your own words work best."
         >
           <StepStory campaignId={c.id} category={c.category} initial={c} />
+        </WizardShell>
+      );
+    case 'photos':
+      return (
+        <WizardShell
+          step="photos"
+          campaignId={c.id}
+          title="Add photos"
+          subtitle="Real photos help people trust and share your fundraiser."
+          aside={
+            <TipCard title="Good photos">
+              <p className="m-0">Show the person, the place or the need. Daylight works best.</p>
+              <p className="m-0">
+                Avoid photos of documents, ID cards or children’s faces you don’t have permission to
+                share.
+              </p>
+            </TipCard>
+          }
+        >
+          <StepPhotos campaignId={c.id} initial={c.photos} />
         </WizardShell>
       );
     case 'review':

@@ -12,10 +12,11 @@ Every feature we build gets a living doc here. It explains how the feature **act
 
 ## Index
 
-| Doc                                                   | Feature IDs                   | Status                                   |
-| ----------------------------------------------------- | ----------------------------- | ---------------------------------------- |
-| [C-01 Create and publish](C-01-create-and-publish.md) | C-01 – C-04, C-06, C-07, O-02 | Shipped (photos and payout step to come) |
-| [A-02 Profile and phone](A-02-profile-and-phone.md)   | A-02, A-13                    | Shipped                                  |
-| [A-12 Continue with Google](A-12-google-signin.md)    | A-12                          | Shipped                                  |
-| [A-01 Email sign-up and login](A-01-email-signup.md)  | A-01, A-03                    | Shipped                                  |
-| [F-01 Skeleton](F-01-skeleton.md)                     | F-01, F-02 (CI), F-04 (local) | Shipped                                  |
+| Doc                                                   | Feature IDs                   | Status                        |
+| ----------------------------------------------------- | ----------------------------- | ----------------------------- |
+| [C-01 Create and publish](C-01-create-and-publish.md) | C-01 – C-04, C-06, C-07, O-02 | Shipped (payout step to come) |
+| [A-02 Profile and phone](A-02-profile-and-phone.md)   | A-02, A-13                    | Shipped                       |
+| [C-05 Photos](C-05-photos.md)                         | C-05, O-02                    | Shipped (S3 in slice 7)       |
+| [A-12 Continue with Google](A-12-google-signin.md)    | A-12                          | Shipped                       |
+| [A-01 Email sign-up and login](A-01-email-signup.md)  | A-01, A-03                    | Shipped                       |
+| [F-01 Skeleton](F-01-skeleton.md)                     | F-01, F-02 (CI), F-04 (local) | Shipped                       |

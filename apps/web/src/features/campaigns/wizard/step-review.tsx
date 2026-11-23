@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { ApiError, apiPost } from '@/lib/api';
 import { formError } from '@/features/auth/error-messages';
-import { CategoryCover } from '../category-cover';
+import { CampaignCover } from '../campaign-cover';
 import { stepHref, type WizardStep } from './steps';
 
 interface Props {
@@ -87,6 +87,14 @@ export function StepReview({ campaign: c, organiser }: Props) {
     },
     { step: 'goal', label: 'Place', value: place || 'Not set' },
     { step: 'story', label: 'Title', value: c.title || 'Not written yet' },
+    {
+      step: 'photos',
+      label: 'Photos',
+      value:
+        c.photos.length === 0
+          ? 'None yet'
+          : `${c.photos.length} photo${c.photos.length === 1 ? '' : 's'}${c.photos.some((p) => p.sensitive) ? ' (some shown blurred)' : ''}`,
+    },
   ];
 
   return (
@@ -145,11 +153,13 @@ export function StepReview({ campaign: c, organiser }: Props) {
           </p>
           <div className="rounded-card bg-sunk p-3">
             <div className="overflow-hidden rounded-2xl border border-line bg-surface">
-              {c.category ? (
-                <CategoryCover category={c.category} compact className="h-24" />
-              ) : (
-                <div className="h-24 bg-line" />
-              )}
+              <CampaignCover
+                photo={c.photos[0]}
+                category={c.category}
+                alt={c.title}
+                compact
+                className="h-24"
+              />
               <div className="flex flex-col gap-0.5 px-3 py-2.5">
                 <p className="m-0 text-sm font-semibold leading-snug">{c.title || 'Your title'}</p>
                 <p className="m-0 text-xs text-ink-3">

@@ -47,7 +47,7 @@ Source of truth for what to build. IDs are stable: reference them in branches, c
 | C-02 | Beneficiary choice | Raise for myself or for someone else (name, phone, relationship) | Must | Organisers | Done |
 | C-03 | Categories | Medical, Funeral, Education, Emergency, Community, Event, Other | Must | Organisers | Done |
 | C-04 | Story editor | Title plus guided prompts (who, what happened, what the money is for, by when) with live preview | Must | Organisers | Done |
-| C-05 | Photo upload | Cover photo plus up to 10; compressed on the phone; option to blur sensitive images | Must | Organisers | Not started |
+| C-05 | Photo upload | Cover photo plus up to 10; compressed on the phone; option to blur sensitive images | Must | Organisers | Done |
 | C-06 | Goal and end date | Goal in ZMW (keep what you raise), optional end date, goal can be raised later | Must | Organisers | In progress |
 | C-07 | Preview and publish | Preview as donors and WhatsApp will see it; publishing makes it live at once | Must | Organisers | Done |
 | C-08 | Co-organisers | Up to 3 helpers who can share, post updates and thank donors, but not withdraw | Should | Organisers | Not started |

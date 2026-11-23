@@ -1,4 +1,4 @@
-import { CSRF_HEADER, type OwnCampaign, type PublicCampaign } from '@fundizo/shared';
+import { CSRF_HEADER, type OwnCampaign, type Photo, type PublicCampaign } from '@fundizo/shared';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -14,6 +14,15 @@ const router = { push: vi.fn(), replace: vi.fn(), refresh: vi.fn() };
 vi.mock('next/navigation', () => ({ useRouter: () => router }));
 
 const ID = '0b9a5a3c-1f2e-4d5c-8b7a-6e5f4d3c2b1a';
+const photo: Photo = {
+  id: '9c3e2a1b-4d5f-4a6b-8c7d-1e2f3a4b5c6d',
+  url: '/media/photos/9c3e2a1b-4d5f-4a6b-8c7d-1e2f3a4b5c6d/w1200.webp',
+  thumbUrl: '/media/photos/9c3e2a1b-4d5f-4a6b-8c7d-1e2f3a4b5c6d/w400.webp',
+  blurUrl: '/media/photos/9c3e2a1b-4d5f-4a6b-8c7d-1e2f3a4b5c6d/blur.webp',
+  sensitive: false,
+  width: 1200,
+  height: 900,
+};
 const draft: OwnCampaign = {
   id: ID,
   status: 'draft',
@@ -33,6 +42,7 @@ const draft: OwnCampaign = {
   district: 'Kabwe',
   publishedAt: null,
   updatedAt: '2026-11-23T10:00:00.000Z',
+  photos: [photo],
 };
 
 const json = (body: unknown, status = 200) =>
@@ -203,6 +213,7 @@ describe('public page', () => {
     beneficiary: { name: 'Joseph Banda', relationship: 'Brother' },
     verified: false,
     publishedAt: '2026-11-23T11:00:00.000Z',
+    photos: [{ ...photo, sensitive: true }],
   };
 
   it('shows the story, who is organising for whom, and a calm verification note', () => {
@@ -212,6 +223,15 @@ describe('public page', () => {
     expect(screen.getAllByText('Kabwe, Central')[0]).toBeInTheDocument();
     expect(screen.getByText('Verification in progress')).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: 'Donations open soon' })[0]).toBeDisabled();
+  });
+
+  it('shows a sensitive cover blurred until the viewer chooses to see it', async () => {
+    const u = userEvent.setup();
+    render(<CampaignPage campaign={pub} justPublished={false} />);
+    const img = screen.getByRole('img', { name: /hidden: sensitive photo/ });
+    expect(img).toHaveAttribute('src', photo.blurUrl);
+    await u.click(screen.getByRole('button', { name: 'Show photo' }));
+    expect(screen.getByRole('img', { name: draft.title })).toHaveAttribute('src', photo.url);
   });
 
   it('celebrates straight after publishing', () => {
@@ -226,6 +246,7 @@ describe('resumeStep', () => {
     expect(resumeStep({ ...draft, goalNgwee: null })).toBe('goal');
     expect(resumeStep({ ...draft, category: 'funeral', goalNgwee: null })).toBe('review');
     expect(resumeStep({ ...draft, title: '' })).toBe('story');
+    expect(resumeStep({ ...draft, photos: [] })).toBe('photos');
     expect(resumeStep(draft)).toBe('review');
   });
 });

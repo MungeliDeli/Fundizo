@@ -1,7 +1,8 @@
 import { CATEGORY_INFO, type PublicCampaign, formatKwacha, progressPercent } from '@fundizo/shared';
 import { Alert } from '@/components/ui/alert';
 import { Icon } from '@/components/ui/icon';
-import { CategoryCover } from '../category-cover';
+import { CampaignCover } from '../campaign-cover';
+import { PhotoImage } from '../photos/photo-image';
 import { ShareActions } from './share-actions';
 
 /**
@@ -78,7 +79,13 @@ export function CampaignPage({
 
       <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_23rem] lg:gap-12">
         <article className="flex min-w-0 flex-col gap-6">
-          <CategoryCover category={c.category} className="h-48 rounded-card sm:h-64 lg:h-80" />
+          <CampaignCover
+            photo={c.photos[0]}
+            category={c.category}
+            alt={c.title}
+            priority
+            className="aspect-[4/3] w-full rounded-card sm:aspect-[16/9]"
+          />
           <header className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center gap-2 text-sm text-ink-2">
               <span className="inline-flex h-7 items-center rounded-full bg-sunk px-3 font-semibold text-ink">
@@ -139,6 +146,24 @@ export function CampaignPage({
             <section className="flex flex-col gap-3">
               <h2 className="display m-0 text-2xl">More from {c.organiser.firstName}</h2>
               <p className="m-0 whitespace-pre-line text-lg text-ink-2">{c.story.extra}</p>
+            </section>
+          ) : null}
+
+          {c.photos.length > 1 ? (
+            <section className="flex flex-col gap-3">
+              <h2 className="display m-0 text-2xl">Photos</h2>
+              <ul className="m-0 grid list-none grid-cols-2 gap-3 p-0 sm:grid-cols-3">
+                {c.photos.slice(1).map((p, i) => (
+                  <li key={p.id}>
+                    <PhotoImage
+                      photo={p}
+                      size="thumb"
+                      alt={`${c.title}, photo ${i + 2}`}
+                      className="aspect-[4/3] rounded-2xl"
+                    />
+                  </li>
+                ))}
+              </ul>
             </section>
           ) : null}
 
