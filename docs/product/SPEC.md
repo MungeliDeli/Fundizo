@@ -1,10 +1,10 @@
-# Harambee — Local Fundraising Platform: Product & Technical Specification
+# Fundizo — Local Fundraising Platform: Product & Technical Specification
 
 Nov 20, 2026 · @Mungeli ONE
 
 ## What a project like this needs
 
-This doc covers the full spec for a GoFundMe-style platform built for Zambia, where people give through mobile money, at funerals and weddings, through churches, and from the diaspora. Harambee is a working name. Every project like this needs the items below, roughly in this order, and each one is a section of this doc.
+This doc covers the full spec for a GoFundMe-style platform built for Zambia, where people give through mobile money, at funerals and weddings, through churches, and from the diaspora. Fundizo is the product name (it replaced the working name "Harambee"). Every project like this needs the items below, roughly in this order, and each one is a section of this doc.
 
 1. **Problem statement**: what is broken today, and for whom.
 2. **Who is affected**: the people who feel the problem and what it costs them.
@@ -610,7 +610,7 @@ Decided for now: the licensing question and the plan for a fraudulent campaign g
 
 **Open questions** (each is a decision for you)
 
-- [ ] Product name.
+- [x] Product name: **Fundizo**.
 - [ ] Suggested tip default (for example 10%), and whether to add a small platform fee later.
 - [ ] Network fees: deducted from the donation by default with a "cover the fees" option (proposed), or absorbed by the platform?
 - [ ] Who pays for fraud refunds under the donor protection policy?

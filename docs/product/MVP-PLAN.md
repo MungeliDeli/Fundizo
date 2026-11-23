@@ -1,0 +1,69 @@
+# MVP build plan: one feature at a time, end to end
+
+**Status:** Proposed (2026-11-23), waiting for approval.
+
+## How we work
+
+We build in **vertical slices**. Each slice is one user-visible capability, built **end to end**: database → API → web UI (mobile and desktop) → tests → docs. Only then do we start the next slice.
+
+For every slice:
+
+1. **Plan:** a short note covering scope, feature IDs, the tables and endpoints, and the screens. The user agrees before code starts.
+2. **Build** on its own branch, `feat/<ID>-<name>`.
+3. **Done means:**
+   - The database migration, API and UI are all working together. No mocked backends, except external services such as SMS or MTN, which run behind a fake adapter until their real account is available.
+   - Checks pass: typecheck, lint and tests (unit + API integration tests against real Postgres).
+   - The UI works at phone width (~390 px) **and** desktop width (~1280 px+), in light and dark.
+   - The feature doc is in `docs/features/`, and the status is updated in `FEATURES.md`.
+   - It's committed and pushed, and a PR is open.
+4. **The user sees it running** (the Codespace link) and says OK. Then we merge it to `main`.
+5. The next slice starts. **Never two slices at once.**
+
+## What's in the MVP
+
+The MVP is the **Phase 0 + Phase 1 "Must"** features from [FEATURES.md](features/FEATURES.md): one person can sign up, raise money for someone, have both verified, receive mobile money donations, and withdraw safely, with staff tools to oversee it.
+
+**Not in the MVP:** the home feed (U-07) and discover feed (U-08) are Phase 2, because a feed needs campaigns, donations and follows to exist first. Groups, events, USSD and local languages are also Phase 2. The "Should"/"Could" Phase 1 items come after the core loop works (listed at the end).
+
+## Which comes first: accounts, not the feed
+
+**Recommendation: start with accounts (phone sign-up and login).** Almost every other feature needs to know *who* is acting: creating a campaign, withdrawing, staff review. The feed comes last, because it only shows things the other features create.
+
+## The slices, in order
+
+| # | Slice | Feature IDs | What you'll be able to see and do |
+| --- | --- | --- | --- |
+| 0 | **Skeleton** | F-01, F-02 (CI), F-04 (local config) | Monorepo with `apps/api` (NestJS), `apps/web` (Next.js), `packages/shared`; Postgres and Redis in Docker; migrations wired up; GitHub Actions runs checks. A responsive web shell (desktop top bar, mobile bottom bar) shows "API connected". |
+| 1 | **Sign up and log in with phone** | A-01, A-03, N-01 (dev SMS adapter) | Enter a phone number → get an OTP (shown in a dev-only "SMS outbox" until an SMS provider is chosen) → add your name → logged in. Log out, log in again, log out of other devices. |
+| 2 | **Profile** | A-02 | View and edit your name, district and language. (The photo comes with slice 4.) |
+| 3 | **Create and publish a campaign** | C-01, C-02, C-03, C-04, C-06, C-07 | The wizard (for me or someone else, category, goal, story) saves each step to the server; publish; the public campaign page renders on the server with link previews (O-02). Open the link logged out. |
+| 4 | **Photos** | C-05 | Upload a cover and up to 10 photos (presigned uploads; MinIO locally, S3 later), compressed on the phone, EXIF stripped, shown on the page and in link previews. |
+| 5 | **Ledger and background jobs** | F-06, F-09 | Append-only double-entry ledger (enforced in the DB), transactional outbox, BullMQ worker. Visible as: campaign totals are now calculated from the ledger, plus a passing property-test report. |
+| 6 | **Donate (fake provider)** | D-01, D-02, D-03, D-05, D-08, D-09, D-10, U-04 | Guest donates: amount, tip, number, name/anonymous, message → waiting screen → a dev "approve / decline / time out" panel plays the network → ledger entries → live total and donor wall. Idempotent, with no double charge. |
+| 7 | **Staging on AWS** | F-03, F-04, F-05 | The app deployed to a real staging URL, with secrets in Secrets Manager and error tracking. From here every merged slice deploys. |
+| 8 | **MTN MoMo sandbox** | F-07, D-06 | Real Request-to-Pay against MTN's sandbox, with contract tests. *Needs MTN sandbox keys.* |
+| 9 | **Airtel Money sandbox** | F-08, D-07 | Same for Airtel. *Needs Airtel test access (apply early).* |
+| 10 | **SMS for real** | N-01, N-02, D-11 | A Zambian SMS aggregator behind the adapter; message templates; OTP and receipts by real SMS. *Needs a provider choice.* |
+| 11 | **Share** | O-01, O-02, O-03, O-04 | Share sheet, pre-written messages, reshare after donating. |
+| 12 | **Updates and thank-yous** | U-01, U-02, U-03 | Organiser posts updates; donors are notified; thank donors. |
+| 13 | **Staff accounts and admin console** | A-10, T-06, T-07 | Separate admin app with 2FA, roles, audit log, and a support lookup by phone or reference. |
+| 14 | **Verify people** | A-04, A-05, T-03 | NRC + selfie upload (encrypted KYC bucket), wallet-name match, staff review queue. |
+| 15 | **Verify campaigns** | V-01, V-02, V-03, V-04, V-05, V-06 | Unlock-withdrawals checklist, beneficiary SMS YES/NO, evidence, automatic checks, Verified badge, 30-day timeout. |
+| 16 | **Withdrawals** | A-06, P-01, P-02, P-03, P-04, P-05, T-04 | Payout wallets (OTP + 48 h cool-off), available balance, request, staff approval, disbursement (sandbox), tracking. |
+| 17 | **Money integrity** | P-06, P-08, P-09, D-12, T-08 | Public money trail, float per network, daily reconciliation (payouts pause on gaps), refunds, finance reports. |
+| 18 | **Trust and lifecycle** | T-01, T-02, C-09, C-10, A-07 | Report a campaign, moderation queue, funeral template, pause/end/close, account recovery after a SIM change. |
+
+Each row may split into smaller slices when we plan it. The order may change when the user decides.
+
+**After the core loop (still Phase 1, "Should"/"Could"):** C-08 co-organisers, C-11 browse and search, D-04 cover the fees, V-07 re-verification, P-07 proof of use, O-05–O-08 share images / QR / tracked links / nudges, U-05 words of support, U-06 follow, A-08 notification settings, A-09 privacy controls, N-03 push, N-04 email, T-05 risk flags, B-01/B-02 organiser dashboard.
+
+**Then Phase 2** (groups, events and pledges, feeds, USSD, local languages, Zamtel), behind its phase gate.
+
+## Things the user needs to arrange (ahead of the slice that needs them)
+
+| Needed for | What |
+| --- | --- |
+| Slice 7 | An AWS account (af-south-1) and who owns billing |
+| Slice 8 | Sign up at momodeveloper.mtn.com and get sandbox keys |
+| Slice 9 | Contact Airtel Zambia business for test access (slow, so start now) |
+| Slice 10 | Choose a Zambian SMS/USSD aggregator |
