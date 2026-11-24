@@ -16,10 +16,11 @@ An ADR records one significant decision: the context, what we chose, what we rej
 
 ## Index
 
-| #                                                 | Title                                                                  | Status   |
-| ------------------------------------------------- | ---------------------------------------------------------------------- | -------- |
-| [0001](0001-baseline-architecture.md)             | Baseline architecture and engineering decisions (from SPEC)            | Accepted |
-| [0002](0002-mvp-providers-zynlepay-brevo-aws.md)  | MVP providers: ZynlePay sandbox, Brevo email/SMS, AWS                  | Accepted |
-| [0004](0004-accounts-email-google-phone-later.md) | Accounts: email + password, Google; phone later; server-side sessions  | Accepted |
-| [0005](0005-photo-uploads-through-the-api.md)     | Campaign photos uploaded through the API and re-encoded before storage | Accepted |
-| [0003](0003-slice-0-tooling.md)                   | Slice 0 tooling: ESM, same-origin /api proxy, Drizzle module, linters  | Accepted |
+| #                                                                   | Title                                                                       | Status   |
+| ------------------------------------------------------------------- | --------------------------------------------------------------------------- | -------- |
+| [0001](0001-baseline-architecture.md)                               | Baseline architecture and engineering decisions (from SPEC)                 | Accepted |
+| [0002](0002-mvp-providers-zynlepay-brevo-aws.md)                    | MVP providers: ZynlePay sandbox, Brevo email/SMS, AWS                       | Accepted |
+| [0004](0004-accounts-email-google-phone-later.md)                   | Accounts: email + password, Google; phone later; server-side sessions       | Accepted |
+| [0005](0005-photo-uploads-through-the-api.md)                       | Campaign photos uploaded through the API and re-encoded before storage      | Accepted |
+| [0006](0006-ledger-enforced-in-the-database-and-in-process-jobs.md) | Ledger enforced by the database; least-privilege app login; in-process jobs | Accepted |
+| [0003](0003-slice-0-tooling.md)                                     | Slice 0 tooling: ESM, same-origin /api proxy, Drizzle module, linters       | Accepted |

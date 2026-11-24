@@ -91,6 +91,26 @@ export function phoneConfirmedMessage(
   };
 }
 
+export function fundraiserLiveMessage(
+  to: To,
+  firstName: string,
+  title: string,
+  link: string,
+): MailMessage {
+  return {
+    to,
+    tag: 'fundraiser-live',
+    subject: 'Your fundraiser is live',
+    text: `Hi ${firstName},\n\n"${title}" is live and ready for donations.\n\nShare this link with family and friends (WhatsApp works best):\n${link}\n\nYou can withdraw once we have checked the people and the need. We'll tell you what we need.`,
+    html: layout(`
+      <p>Hi ${esc(firstName)},</p>
+      <p><strong>${esc(title)}</strong> is live and ready for donations.</p>
+      <p>Share the link with family and friends. WhatsApp works best.</p>
+      ${button(link, 'See your fundraiser')}
+      <p style="color:#736C61;font-size:13px">You can withdraw once we have checked the people and the need. We'll tell you what we need.</p>`),
+  };
+}
+
 function layout(body: string): string {
   return `<!doctype html><html><body style="margin:0;background:#F6F3EE;padding:24px 12px;font-family:Inter,Arial,sans-serif;color:#17150F;font-size:15px;line-height:1.5">
 <table role="presentation" width="100%" style="max-width:520px;margin:0 auto;background:#FFFFFF;border:1px solid #E3DDD3;border-radius:16px">

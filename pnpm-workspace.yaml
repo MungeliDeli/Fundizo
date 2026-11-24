@@ -8,3 +8,5 @@ minimumReleaseAge: 20160
 # Only these packages may run install scripts (esbuild downloads its native binary).
 allowBuilds:
   esbuild: true
+  # Optional native speed-up for BullMQ's msgpackr; the pure-JS fallback is fine.
+  msgpackr-extract: false

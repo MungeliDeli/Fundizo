@@ -15,10 +15,10 @@ Source of truth for what to build. IDs are stable: reference them in branches, c
 | F-03 | AWS environments | Staging and production in AWS Cape Town: ECS Fargate, RDS PostgreSQL, Redis, S3, NAT gateway with fixed outbound IP | Must | Team | Not started |
 | F-04 | Secrets and config | AWS Secrets Manager; no keys in code, git or the frontend | Must | Team | In progress |
 | F-05 | Observability | Error tracking, logs, traces; alerts on payment success rate, callbacks and float | Must | Team | Not started |
-| F-06 | Double-entry ledger | Permanent ledger entries; every balance is calculated from them, never edited | Must | Team | Not started |
+| F-06 | Double-entry ledger | Permanent ledger entries; every balance is calculated from them, never edited | Must | Team | Done |
 | F-07 | MTN MoMo adapter (sandbox) | Collections and disbursements built and tested against MTN's free sandbox | Must | Team | Not started |
 | F-08 | Airtel Money adapter (sandbox) | Collections and disbursements built and tested against Airtel's test environment | Must | Team | Not started |
-| F-09 | Job queue and outbox | Workers for payment status checks, SMS, sweeps and reconciliation, with retries | Must | Team | Not started |
+| F-09 | Job queue and outbox | Workers for payment status checks, SMS, sweeps and reconciliation, with retries | Must | Team | Done |
 
 ## Phase 1 · MVP: donation campaigns (79)
 

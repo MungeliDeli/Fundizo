@@ -10,7 +10,7 @@ Fundizo is a GoFundMe-style fundraising platform for Zambia. Donors pay with MTN
 
 ## Current state
 
-- **Building the MVP slice by slice.** The build order and which slices are done (✅) are in [docs/product/MVP-PLAN.md](docs/product/MVP-PLAN.md). Shipped so far: skeleton (API, web, CI), email accounts, Google sign-in, profile + phone confirmation, create and publish a fundraiser, photos. Each shipped feature has a doc in [docs/features/](docs/features/).
+- **Building the MVP slice by slice.** The build order and which slices are done (✅) are in [docs/product/MVP-PLAN.md](docs/product/MVP-PLAN.md). Shipped so far: skeleton (API, web, CI), email accounts, Google sign-in, profile + phone confirmation, create and publish a fundraiser, photos, ledger + background jobs. Each shipped feature has a doc in [docs/features/](docs/features/).
 - **Work one slice at a time, end to end** (DB → API → web UI → tests → docs). Never build the whole frontend first and wire the backend later. Never start the next slice before the user has seen the current one running and said OK.
 - **Per slice:** build it on `feat/<ID>-<name>`. When it works end to end and every check passes, **merge it to `main` yourself** (pre-approved by the user) and push. Then give the user (1) a plain-language explanation of the feature and (2) exactly where to see it (the running link and what to click). Wait for their OK before starting the next slice.
 - Ask first only for decisions that are genuinely the user's (product choices, money rules, providers, costs).
@@ -106,13 +106,15 @@ Modular monolith in TypeScript (NestJS API, Next.js web and admin, shared packag
 ```bash
 corepack enable && pnpm install   # Node 24 (.nvmrc); pnpm refuses packages < 14 days old
 pnpm services:up                  # Postgres 16 + Redis 7 in Docker (localhost only)
-pnpm db:migrate                   # apply migrations
+pnpm db:migrate                   # apply migrations as the owner; creates the API's least-privilege login in dev
 pnpm dev                          # API on :4000, web on :3000 (browser calls /api/* → API)
 pnpm check                        # typecheck + lint + tests, every package (needs services up)
 pnpm build                        # production builds
 pnpm db:generate                  # schema change → new SQL migration (review it!)
 pnpm format                       # prettier
 ```
+
+The API connects as `fundizo_api` (`DATABASE_URL`, no UPDATE/DELETE on the ledger); migrations use the owner (`MIGRATION_DATABASE_URL`) ([ADR 0006](docs/architecture/decisions/0006-ledger-enforced-in-the-database-and-in-process-jobs.md)). Background jobs (outbox relay + BullMQ worker) run inside the API process (`JOBS_ENABLED`). Dev tools: `/dev/outbox`, `/dev/ledger`.
 
 Local settings: `apps/api/.env` (git-ignored; template `apps/api/.env.example`) holds `WEB_BASE_URL`, `AUTH_SECRET`, the Brevo key and the Google client id and secret (setup: [A-12 doc](docs/features/A-12-google-signin.md#setting-up-google-sign-in)). Put settings there, not in shell variables: Turborepo filters undeclared env vars out of `pnpm dev`. Without a Brevo key, emails appear at `/dev/outbox` (dev only); texts go there too until `SMS_TRANSPORT=brevo` ([A-02 doc → Switching on real SMS](docs/features/A-02-profile-and-phone.md#switching-on-real-sms-brevo)). Tests never read `apps/api/.env`. Brevo setup: [A-01 feature doc → Setting up Brevo](docs/features/A-01-email-signup.md#setting-up-brevo).
 

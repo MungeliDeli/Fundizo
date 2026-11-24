@@ -7,6 +7,10 @@ import * as schema from '../../db/schema/index.js';
 export const PG_POOL = Symbol('PG_POOL');
 export const DB = Symbol('DB');
 export type Database = NodePgDatabase<typeof schema>;
+/** An open database transaction (the `tx` in `db.transaction(async (tx) => …)`). */
+export type Tx = Parameters<Parameters<Database['transaction']>[0]>[0];
+/** Either: read helpers accept both, so callers can read inside their own transaction. */
+export type Executor = Database | Tx;
 
 /**
  * One Postgres pool for the app, and a Drizzle client on top of it.

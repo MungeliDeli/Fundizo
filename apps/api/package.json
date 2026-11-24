@@ -11,13 +11,14 @@
     "lint": "oxlint --type-aware src test",
     "test": "vitest run",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "node src/db/migrate.ts"
   },
   "dependencies": {
     "@fundizo/shared": "workspace:*",
     "@nestjs/common": "12.4.0",
     "@nestjs/core": "12.4.0",
     "@nestjs/platform-express": "12.4.0",
+    "bullmq": "6.7.2",
     "drizzle-orm": "0.45.4",
     "express": "5.3.0",
     "helmet": "8.3.0",
@@ -41,6 +42,7 @@
     "@types/pg": "8.23.1",
     "@types/supertest": "7.2.1",
     "drizzle-kit": "0.31.11",
+    "fast-check": "4.10.2",
     "oxlint": "1.92.0",
     "oxlint-tsgolint": "7.0.2006",
     "pino-pretty": "13.2.0",

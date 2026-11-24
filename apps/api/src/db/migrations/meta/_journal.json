@@ -43,6 +43,13 @@
       "when": 1795452048334,
       "tag": "0005_campaign_media",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1795500412370,
+      "tag": "0006_ledger_and_outbox",
+      "breakpoints": true
     }
   ]
 }

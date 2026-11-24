@@ -45,7 +45,12 @@ flowchart TB
 | `outreach`      | share links, share stats                                                                | (none)                                            | O-*           |
 | platform        | outbox_events                                                                           | (none)                                            | F-09          |
 
-**Module interfaces in use:** `identity` exports `AuthGuard` (sessions) and `UserDirectory` (read-only name, place and verification flags; never email or phone). `campaigns` uses only those.
+**Module interfaces in use:**
+
+- `identity` exports `AuthGuard` (sessions), `UserDirectory` (read-only name, place and verification flags; never email or phone) and `UserContacts` (verified email, for `notifications` only).
+- `campaigns` exports `CampaignDirectory` (read-only summaries) and publishes `campaign.published`.
+- `ledger` exports `LedgerService` (`post` inside the caller's transaction, balance reads).
+- Platform jobs (`src/jobs/`): `OutboxService` (write an event in a transaction) and `EventHandlers` (react to one). `notifications` handles `campaign.published` with the "fundraiser is live" email.
 
 **Rules**
 

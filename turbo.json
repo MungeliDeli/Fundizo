@@ -15,7 +15,7 @@
     "lint": {},
     "test": {
       "dependsOn": ["^build"],
-      "env": ["DATABASE_URL", "REDIS_URL"]
+      "env": ["DATABASE_URL", "MIGRATION_DATABASE_URL", "REDIS_URL"]
     }
   }
 }

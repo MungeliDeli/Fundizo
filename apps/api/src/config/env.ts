@@ -9,7 +9,8 @@ import { z } from 'zod';
  * In production there are NO defaults: every value must be provided (AWS Secrets Manager).
  */
 const DEV_DEFAULTS = {
-  DATABASE_URL: 'postgres://fundizo:fundizo_dev_only@localhost:5432/fundizo',
+  // The API's least-privilege login (src/db/migrate.ts creates it in dev); migrations use the owner.
+  DATABASE_URL: 'postgres://fundizo_api:fundizo_api_dev_only@localhost:5432/fundizo',
   REDIS_URL: 'redis://localhost:6379',
   WEB_BASE_URL: 'http://localhost:3000',
   AUTH_SECRET: 'dev-only-secret-never-use-in-production-0000',
@@ -62,6 +63,19 @@ const EnvSchema = z
     STORAGE_LOCAL_DIR: z.string().min(1).default('.storage'),
     /** Public base URL for photos (the CDN in production). Defaults to the relative /media (proxied to the API in dev). */
     MEDIA_PUBLIC_BASE_URL: z.url({ protocol: /^https?$/ }).optional(),
+
+    /**
+     * Background jobs (F-09): the outbox relay and the BullMQ worker run inside the API process when
+     * true. Tests turn them off unless they test jobs; a separate worker service can come later.
+     */
+    JOBS_ENABLED: z
+      .enum(['true', 'false'])
+      .default('true')
+      .transform((v) => v === 'true'),
+    /** How often the relay looks for new outbox events, in milliseconds. */
+    OUTBOX_POLL_MS: z.coerce.number().int().min(10).max(60_000).default(500),
+    /** First retry delay for a failed job; doubles each try (8 tries ≈ 10 minutes at 5 s). */
+    JOBS_RETRY_DELAY_MS: z.coerce.number().int().min(10).max(600_000).default(5_000),
 
     /** Google sign-in (A-12). Both or neither; without them the "Continue with Google" button is hidden. */
     GOOGLE_CLIENT_ID: z.string().min(10).optional(),

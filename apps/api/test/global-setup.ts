@@ -1,11 +1,11 @@
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import pg from 'pg';
+import { migrateDatabase } from '../src/db/migrate.js';
 import { testEnv } from './test-env.js';
 
-/** Create the test database if needed and apply all migrations to it. */
+/** Create the test database if needed, apply all migrations and set up the app login. */
 export default async function setup() {
-  const url = new URL(testEnv().DATABASE_URL);
+  const { DATABASE_URL, MIGRATION_DATABASE_URL } = testEnv();
+  const url = new URL(MIGRATION_DATABASE_URL);
   const dbName = url.pathname.slice(1);
   if (!dbName.endsWith('_test')) throw new Error(`Refusing to run tests against "${dbName}"`);
 
@@ -17,9 +17,9 @@ export default async function setup() {
   if (exists.rowCount === 0) await client.query(`create database "${dbName}"`);
   await client.end();
 
-  const pool = new pg.Pool({ connectionString: url.toString() });
-  await migrate(drizzle(pool), {
-    migrationsFolder: new URL('../src/db/migrations', import.meta.url).pathname,
+  await migrateDatabase({
+    migrationUrl: MIGRATION_DATABASE_URL,
+    appUrl: DATABASE_URL,
+    production: false,
   });
-  await pool.end();
 }

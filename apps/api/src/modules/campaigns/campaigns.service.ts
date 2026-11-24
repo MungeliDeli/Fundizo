@@ -17,9 +17,12 @@ import {
   type CampaignRow,
 } from '../../db/schema/index.js';
 import { DB, type Database } from '../../infra/database/database.module.js';
+import { OutboxService } from '../../jobs/outbox.service.js';
+import { LedgerService } from '../ledger/ledger.service.js';
 import { UserDirectory } from '../identity/user-directory.service.js';
 import { CampaignPhotosRepository } from './campaign-photos.repository.js';
 import { campaignType } from './campaign-types.js';
+import { CampaignPublished } from './events.js';
 import { makeSlug } from './slugs.js';
 
 const DAY = 24 * 60 * 60;
@@ -36,6 +39,8 @@ export class CampaignsService {
     private readonly users: UserDirectory,
     private readonly limiter: RateLimiter,
     private readonly photos: CampaignPhotosRepository,
+    private readonly ledger: LedgerService,
+    private readonly outbox: OutboxService,
   ) {}
 
   async create(ownerId: string, beneficiary: Beneficiary): Promise<OwnCampaign> {
@@ -129,11 +134,16 @@ export class CampaignsService {
     // A clash on the random ending is very unlikely; retry a few times with a new one.
     for (let attempt = 0; attempt < 5; attempt++) {
       try {
-        const [published] = await this.db
-          .update(campaigns)
-          .set({ status: 'published', slug: makeSlug(campaign.title), publishedAt: new Date() })
-          .where(and(eq(campaigns.id, id), eq(campaigns.status, 'draft')))
-          .returning();
+        // The status change and its event commit together (transactional outbox, F-09).
+        const published = await this.db.transaction(async (tx) => {
+          const [row] = await tx
+            .update(campaigns)
+            .set({ status: 'published', slug: makeSlug(campaign.title), publishedAt: new Date() })
+            .where(and(eq(campaigns.id, id), eq(campaigns.status, 'draft')))
+            .returning();
+          if (row) await this.outbox.add(tx, CampaignPublished, { campaignId: id });
+          return row;
+        });
         if (published) return toOwn(published, beneficiary, photos);
         return this.getOwn(ownerId, id); // published meanwhile (double click)
       } catch (err) {
@@ -163,8 +173,12 @@ export class CampaignsService {
       category: row.campaign.category,
       story: c.story,
       goalNgwee: c.goalNgwee,
-      // Derived from the ledger once donations exist (slices 5–6). Never stored on the campaign.
-      raisedNgwee: 0,
+      // Always derived from the ledger (F-06), never stored on the campaign.
+      raisedNgwee: Math.max(
+        0,
+        await this.ledger.balance({ kind: 'campaign_funds', campaignId: c.id }),
+      ),
+      // Counted from donations once they exist (slice 6).
       donorCount: 0,
       endDate: c.endDate,
       province: c.province,

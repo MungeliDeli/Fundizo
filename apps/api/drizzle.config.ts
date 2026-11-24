@@ -6,7 +6,9 @@ export default defineConfig({
   schema: './src/db/schema/index.ts',
   out: './src/db/migrations',
   dbCredentials: {
-    url: process.env.DATABASE_URL ?? 'postgres://fundizo:fundizo_dev_only@localhost:5432/fundizo',
+    url:
+      process.env.MIGRATION_DATABASE_URL ??
+      'postgres://fundizo:fundizo_dev_only@localhost:5432/fundizo',
   },
   strict: true,
   verbose: true,

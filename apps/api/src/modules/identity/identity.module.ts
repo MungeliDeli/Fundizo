@@ -10,6 +10,7 @@ import { GoogleAuthService } from './google-auth.service.js';
 import { MeController } from './me.controller.js';
 import { ProfileService } from './profile.service.js';
 import { SessionsService } from './sessions.service.js';
+import { UserContacts } from './user-contacts.service.js';
 import { UserDirectory } from './user-directory.service.js';
 import { UserViewService } from './user-view.service.js';
 
@@ -23,6 +24,7 @@ import { UserViewService } from './user-view.service.js';
     SessionsService,
     UserViewService,
     UserDirectory,
+    UserContacts,
     AuthGuard,
     RateLimiter,
     {
@@ -34,7 +36,8 @@ import { UserViewService } from './user-view.service.js';
           : null,
     },
   ],
-  // Public interface for other modules: the session guard and a read-only user directory.
-  exports: [AuthGuard, SessionsService, UserDirectory],
+  // Public interface for other modules: the session guard, a read-only user directory, and
+  // contact details for the notifications module only.
+  exports: [AuthGuard, SessionsService, UserDirectory, UserContacts],
 })
 export class IdentityModule {}

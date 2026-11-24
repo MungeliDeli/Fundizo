@@ -26,15 +26,18 @@ export async function createTestApp(customise: (b: TestingModuleBuilder) => void
 
 /** Wipe test data between files. Guarded so it can only ever run against *_test / Redis DB 15. */
 export async function resetData() {
-  const dbUrl = process.env.DATABASE_URL ?? '';
+  const dbUrl = process.env.MIGRATION_DATABASE_URL ?? '';
   const redisUrl = process.env.REDIS_URL ?? '';
   if (!new URL(dbUrl).pathname.endsWith('_test') || !redisUrl.endsWith('/15')) {
     throw new Error('resetData refused: not a test database');
   }
   const client = new pg.Client({ connectionString: dbUrl });
   await client.connect();
+  // The ledger refuses TRUNCATE even from its owner (append-only trigger). Tests are the one place
+  // that wipes it, so triggers are switched off for this session only (needs the owner/superuser).
+  await client.query(`set session_replication_role = replica`);
   await client.query(
-    'truncate users, sessions, one_time_tokens, user_identities, campaigns, campaign_beneficiaries, campaign_media cascade',
+    'truncate users, sessions, one_time_tokens, user_identities, campaigns, campaign_beneficiaries, campaign_media, ledger_entries, ledger_transactions, ledger_accounts, outbox_events cascade',
   );
   await client.end();
   const redis = new Redis(redisUrl);

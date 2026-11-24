@@ -55,7 +55,11 @@ export default async function DevOutboxPage() {
         <h1 className="display m-0 text-3xl">Outbox</h1>
         <p className="m-0 max-w-prose text-ink-2">
           Emails and text messages land here instead of real inboxes and phones until Brevo is
-          switched on. Newest first; the last 50 of each are kept.
+          switched on. Newest first; the last 50 of each are kept. See also the{' '}
+          <a href="/dev/ledger" className="font-semibold text-accent-ink">
+            ledger
+          </a>
+          .
         </p>
       </div>
       {!data ? <p className="text-bad">Couldn’t reach the API.</p> : null}

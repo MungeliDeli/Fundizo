@@ -3,16 +3,29 @@ import { PHOTO_MAX_BYTES, PHOTO_TYPES } from '@fundizo/shared';
 import express from 'express';
 import { RateLimiter } from '../../common/rate-limiter.js';
 import { IdentityModule } from '../identity/identity.module.js';
+import { LedgerModule } from '../ledger/ledger.module.js';
 import { CampaignPhotosRepository } from './campaign-photos.repository.js';
 import { CampaignPhotosService } from './campaign-photos.service.js';
 import { CampaignsController, PublicCampaignsController } from './campaigns.controller.js';
+import { CampaignDirectory } from './campaign-directory.service.js';
 import { CampaignsService } from './campaigns.service.js';
 
-/** Campaigns (C-01 – C-07) and their photos (C-05). Uses identity only through its public exports. */
+/**
+ * Campaigns (C-01 – C-07) and their photos (C-05). Uses identity and the ledger only through their
+ * public exports; publishes CampaignPublished through the outbox.
+ */
 @Module({
-  imports: [IdentityModule],
+  imports: [IdentityModule, LedgerModule],
   controllers: [CampaignsController, PublicCampaignsController],
-  providers: [CampaignsService, CampaignPhotosService, CampaignPhotosRepository, RateLimiter],
+  providers: [
+    CampaignsService,
+    CampaignDirectory,
+    CampaignPhotosService,
+    CampaignPhotosRepository,
+    RateLimiter,
+  ],
+  // Public interface: read-only summaries for other modules (notifications). Never the tables.
+  exports: [CampaignDirectory],
 })
 export class CampaignsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

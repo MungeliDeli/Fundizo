@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config';
 import { testEnv } from './test/test-env.js';
 
 // Integration tests use their own database and Redis DB, so they never touch dev data.
-const { DATABASE_URL, REDIS_URL } = testEnv();
+const { DATABASE_URL, MIGRATION_DATABASE_URL, REDIS_URL } = testEnv();
 
 export default defineConfig({
   test: {
@@ -15,6 +15,9 @@ export default defineConfig({
     env: {
       NODE_ENV: 'test',
       DATABASE_URL,
+      MIGRATION_DATABASE_URL,
+      // Background jobs are off unless a test turns them on (test/jobs.e2e-spec.ts).
+      JOBS_ENABLED: 'false',
       REDIS_URL,
       LOG_LEVEL: 'silent',
       BREVO_API_KEY: '',
