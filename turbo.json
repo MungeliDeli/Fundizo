@@ -12,7 +12,7 @@
       "persistent": true
     },
     "typecheck": { "dependsOn": ["^build"] },
-    "lint": {},
+    "lint": { "dependsOn": ["^build"] },
     "test": {
       "dependsOn": ["^build"],
       "env": ["DATABASE_URL", "MIGRATION_DATABASE_URL", "REDIS_URL"]
