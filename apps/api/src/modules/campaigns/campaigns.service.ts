@@ -178,8 +178,6 @@ export class CampaignsService {
         0,
         await this.ledger.balance({ kind: 'campaign_funds', campaignId: c.id }),
       ),
-      // Counted from donations once they exist (slice 6).
-      donorCount: 0,
       endDate: c.endDate,
       province: c.province,
       district: c.district,

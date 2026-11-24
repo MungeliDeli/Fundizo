@@ -49,6 +49,7 @@ flowchart TB
 
 - `identity` exports `AuthGuard` (sessions), `UserDirectory` (read-only name, place and verification flags; never email or phone) and `UserContacts` (verified email, for `notifications` only).
 - `campaigns` exports `CampaignDirectory` (read-only summaries) and publishes `campaign.published`.
+- `payments` uses `CampaignDirectory` and `LedgerService`, publishes `payment.attempt_created` and `donation.confirmed`, and owns the donor wall and donor count. Mobile money goes through the `PaymentProvider` adapter (`infra/payments`, fake now).
 - `ledger` exports `LedgerService` (`post` inside the caller's transaction, balance reads).
 - Platform jobs (`src/jobs/`): `OutboxService` (write an event in a transaction) and `EventHandlers` (react to one). `notifications` handles `campaign.published` with the "fundraiser is live" email.
 

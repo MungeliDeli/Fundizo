@@ -6,3 +6,4 @@ export * from './campaigns.js';
 export * from './identity.js';
 export * from './ledger.js';
 export * from './platform.js';
+export * from './payments.js';

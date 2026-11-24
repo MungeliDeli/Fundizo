@@ -48,3 +48,32 @@ export const DevLedgerResponse = z.object({
   }),
 });
 export type DevLedgerResponse = z.infer<typeof DevLedgerResponse>;
+
+/** The pretend mobile money network (slice 6): what "the network" does with a waiting prompt. */
+export const DEV_PAYMENT_OUTCOMES = [
+  'approve',
+  'insufficient_funds',
+  'wrong_pin',
+  'cancelled',
+  'expire',
+  'ambiguous',
+] as const;
+export const DevPaymentDecision = z.strictObject({ outcome: z.enum(DEV_PAYMENT_OUTCOMES) });
+export type DevPaymentDecision = z.infer<typeof DevPaymentDecision>;
+
+export const DevPaymentsResponse = z.object({
+  provider: z.enum(['FAKE', 'ZYNLE']),
+  requests: z.array(
+    z.object({
+      reference: z.string(),
+      network: z.enum(['MTN', 'AIRTEL']),
+      maskedPhone: z.string(),
+      amountNgwee: Ngwee,
+      status: z.enum(['PENDING', 'SUCCESSFUL', 'FAILED', 'EXPIRED', 'UNKNOWN']),
+      failureReason: z.string().optional(),
+      feeNgwee: Ngwee.optional(),
+      createdAt: z.number().int(),
+    }),
+  ),
+});
+export type DevPaymentsResponse = z.infer<typeof DevPaymentsResponse>;

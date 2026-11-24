@@ -205,7 +205,6 @@ describe('public page', () => {
     story: draft.story,
     goalNgwee: 6_000_000,
     raisedNgwee: 0,
-    donorCount: 0,
     endDate: null,
     province: 'Central',
     district: 'Kabwe',
@@ -215,19 +214,24 @@ describe('public page', () => {
     publishedAt: '2026-11-23T11:00:00.000Z',
     photos: [{ ...photo, sensitive: true }],
   };
+  const noGifts = { donorCount: 0, donations: [] };
 
   it('shows the story, who is organising for whom, and a calm verification note', () => {
-    render(<CampaignPage campaign={pub} justPublished={false} />);
+    render(<CampaignPage campaign={pub} donations={noGifts} justPublished={false} />);
     expect(screen.getByRole('heading', { level: 1, name: draft.title })).toBeInTheDocument();
     expect(screen.getAllByText('Mary Banda')[0]).toBeInTheDocument();
     expect(screen.getAllByText('Kabwe, Central')[0]).toBeInTheDocument();
     expect(screen.getByText('Verification in progress')).toBeInTheDocument();
-    expect(screen.getAllByRole('button', { name: 'Donations open soon' })[0]).toBeDisabled();
+    expect(screen.getAllByRole('link', { name: 'Donate' })[0]).toHaveAttribute(
+      'href',
+      `/f/${pub.slug}/give`,
+    );
+    expect(screen.getByText('No gifts yet. Yours could be the first.')).toBeInTheDocument();
   });
 
   it('shows a sensitive cover blurred until the viewer chooses to see it', async () => {
     const u = userEvent.setup();
-    render(<CampaignPage campaign={pub} justPublished={false} />);
+    render(<CampaignPage campaign={pub} donations={noGifts} justPublished={false} />);
     const img = screen.getByRole('img', { name: /hidden: sensitive photo/ });
     expect(img).toHaveAttribute('src', photo.blurUrl);
     await u.click(screen.getByRole('button', { name: 'Show photo' }));
@@ -235,7 +239,7 @@ describe('public page', () => {
   });
 
   it('celebrates straight after publishing', () => {
-    render(<CampaignPage campaign={pub} justPublished />);
+    render(<CampaignPage campaign={pub} donations={noGifts} justPublished />);
     expect(screen.getByRole('status')).toHaveTextContent('Your fundraiser is live.');
   });
 });

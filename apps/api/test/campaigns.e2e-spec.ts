@@ -229,7 +229,6 @@ describe('publishing', () => {
       title: complete.title,
       goalNgwee: 6_000_000,
       raisedNgwee: 0,
-      donorCount: 0,
       district: 'Kabwe',
       organiser: { firstName: 'Mary', lastName: 'Banda' },
       beneficiary: { name: 'Joseph Banda', relationship: 'Brother' },

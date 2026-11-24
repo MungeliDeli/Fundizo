@@ -3,6 +3,7 @@
 export * from './auth.js';
 export * from './campaigns.js';
 export * from './dev.js';
+export * from './donations.js';
 export * from './errors.js';
 export * from './health.js';
 export * from './money.js';

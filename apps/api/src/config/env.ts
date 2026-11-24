@@ -77,6 +77,18 @@ const EnvSchema = z
     /** First retry delay for a failed job; doubles each try (8 tries ≈ 10 minutes at 5 s). */
     JOBS_RETRY_DELAY_MS: z.coerce.number().int().min(10).max(600_000).default(5_000),
 
+    /**
+     * Mobile money (D-06/D-07). 'fake' = a pretend network you play from /dev/payments (no money
+     * moves). 'zynle' = ZynlePay sandbox, arriving in slice 8. Production refuses 'fake'.
+     */
+    PAYMENT_PROVIDER: z.enum(['fake', 'zynle']).default('fake'),
+    /** When to ask the provider for a payment's status, in ms after the prompt (money rule 8). */
+    PAYMENT_STATUS_CHECKS_MS: z
+      .string()
+      .regex(/^\d+(,\d+)*$/)
+      .default('10000,30000,60000,120000,300000')
+      .transform((v) => v.split(',').map(Number)),
+
     /** Google sign-in (A-12). Both or neither; without them the "Continue with Google" button is hidden. */
     GOOGLE_CLIENT_ID: z.string().min(10).optional(),
     GOOGLE_CLIENT_SECRET: z.string().min(10).optional(),
@@ -92,6 +104,10 @@ const EnvSchema = z
   .refine((e) => e.NODE_ENV !== 'production' || e.SMS_TRANSPORT === 'brevo', {
     path: ['SMS_TRANSPORT'],
     message: 'must be brevo in production',
+  })
+  .refine((e) => e.NODE_ENV !== 'production' || e.PAYMENT_PROVIDER !== 'fake', {
+    path: ['PAYMENT_PROVIDER'],
+    message: 'the fake provider is for development only',
   })
   .refine((e) => e.NODE_ENV !== 'production' || e.STORAGE_DRIVER === 's3', {
     path: ['STORAGE_DRIVER'],

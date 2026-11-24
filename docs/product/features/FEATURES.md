@@ -71,16 +71,16 @@ Source of truth for what to build. IDs are stable: reference them in branches, c
 
 | ID | Feature | What it does | Priority | Users | Status |
 | --- | --- | --- | --- | --- | --- |
-| D-01 | Guest donation | Donate with no account, just an MTN or Airtel number | Must | Donors | Not started |
-| D-02 | Amount picker | K50, K100, K200, K500 or a custom amount, with a minimum | Must | Donors | Not started |
-| D-03 | Optional tip | Suggested tip to the platform, easy to set to zero; the platform's only revenue | Must | Donors | Not started |
+| D-01 | Guest donation | Donate with no account, just an MTN or Airtel number | Must | Donors | Done |
+| D-02 | Amount picker | K50, K100, K200, K500 or a custom amount, with a minimum | Must | Donors | Done |
+| D-03 | Optional tip | Suggested tip to the platform, easy to set to zero; the platform's only revenue | Must | Donors | Done |
 | D-04 | Cover the fees | Tick box showing the exact network fee; donor adds it on top | Should | Donors | Not started |
-| D-05 | Network detection | MTN or Airtel logo appears from the number's prefix; number remembered on the device | Must | Donors | Not started |
+| D-05 | Network detection | MTN or Airtel logo appears from the number's prefix; number remembered on the device | Must | Donors | Done |
 | D-06 | MTN MoMo collection | USSD push payment prompt (sandbox first, live before launch) | Must | Donors | Not started |
 | D-07 | Airtel Money collection | USSD push payment prompt (sandbox first, live before launch) | Must | Donors | Not started |
-| D-08 | Waiting screen | "Check your phone" with live status, countdown and a resend option | Must | Donors | Not started |
-| D-09 | Payment confirmation | Callback plus status polling; a "not yet confirmed" state; no double charges | Must | Donors | Not started |
-| D-10 | Anonymous giving and message | Give anonymously or show a name, with an optional message of support | Must | Donors | Not started |
+| D-08 | Waiting screen | "Check your phone" with live status, countdown and a resend option | Must | Donors | Done |
+| D-09 | Payment confirmation | Callback plus status polling; a "not yet confirmed" state; no double charges | Must | Donors | Done |
+| D-10 | Anonymous giving and message | Give anonymously or show a name, with an optional message of support | Must | Donors | Done |
 | D-11 | SMS receipt | Receipt by SMS after every successful donation | Must | Donors | Not started |
 | D-12 | Refunds | Staff refund one donation or every donor of a campaign | Must | Staff | Not started |
 
@@ -118,7 +118,7 @@ Source of truth for what to build. IDs are stable: reference them in branches, c
 | U-01 | Campaign updates | Organiser posts text and photos (e.g. "Surgery booked for Friday") | Must | Organisers | Not started |
 | U-02 | Update notifications | Donors and followers notified of each update by SMS (opt-in), push or email | Must | Donors | Not started |
 | U-03 | Thank-you messages | Thank donors one by one or all at once, by SMS or WhatsApp template | Must | Organisers | Not started |
-| U-04 | Donor wall | Recent donors (or Anonymous) with amounts and messages | Must | Donors | Not started |
+| U-04 | Donor wall | Recent donors (or Anonymous) with amounts and messages | Must | Donors | Done |
 | U-05 | Words of support | Donors leave comments; moderated; organiser can hide them | Should | Donors | Not started |
 | U-06 | Follow a campaign | Get updates without donating | Should | Everyone | Not started |
 

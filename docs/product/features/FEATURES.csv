@@ -55,16 +55,16 @@ V-05,Verification,Verified badge,Badge on the campaign page; tap to see exactly 
 V-06,Verification,Unverified timeout,After 30 days unverified: campaign paused and donors offered refunds,1,Must,Staff,Not started
 V-07,Verification,Re-verification,"Triggered when the beneficiary, payout wallet or story changes",1,Should,Staff,Not started
 V-08,Verification,Referee endorsements,"A pastor, headteacher or clinic officer confirms the need through an SMS link",2,Should,Organisers,Not started
-D-01,Donations,Guest donation,"Donate with no account, just an MTN or Airtel number",1,Must,Donors,Not started
-D-02,Donations,Amount picker,"K50, K100, K200, K500 or a custom amount, with a minimum",1,Must,Donors,Not started
-D-03,Donations,Optional tip,"Suggested tip to the platform, easy to set to zero; the platform's only revenue",1,Must,Donors,Not started
+D-01,Donations,Guest donation,"Donate with no account, just an MTN or Airtel number",1,Must,Donors,Done
+D-02,Donations,Amount picker,"K50, K100, K200, K500 or a custom amount, with a minimum",1,Must,Donors,Done
+D-03,Donations,Optional tip,"Suggested tip to the platform, easy to set to zero; the platform's only revenue",1,Must,Donors,Done
 D-04,Donations,Cover the fees,Tick box showing the exact network fee; donor adds it on top,1,Should,Donors,Not started
-D-05,Donations,Network detection,MTN or Airtel logo appears from the number's prefix; number remembered on the device,1,Must,Donors,Not started
+D-05,Donations,Network detection,MTN or Airtel logo appears from the number's prefix; number remembered on the device,1,Must,Donors,Done
 D-06,Donations,MTN MoMo collection,"USSD push payment prompt (sandbox first, live before launch)",1,Must,Donors,Not started
 D-07,Donations,Airtel Money collection,"USSD push payment prompt (sandbox first, live before launch)",1,Must,Donors,Not started
-D-08,Donations,Waiting screen,"""Check your phone"" with live status, countdown and a resend option",1,Must,Donors,Not started
-D-09,Donations,Payment confirmation,"Callback plus status polling; a ""not yet confirmed"" state; no double charges",1,Must,Donors,Not started
-D-10,Donations,Anonymous giving and message,"Give anonymously or show a name, with an optional message of support",1,Must,Donors,Not started
+D-08,Donations,Waiting screen,"""Check your phone"" with live status, countdown and a resend option",1,Must,Donors,Done
+D-09,Donations,Payment confirmation,"Callback plus status polling; a ""not yet confirmed"" state; no double charges",1,Must,Donors,Done
+D-10,Donations,Anonymous giving and message,"Give anonymously or show a name, with an optional message of support",1,Must,Donors,Done
 D-11,Donations,SMS receipt,Receipt by SMS after every successful donation,1,Must,Donors,Not started
 D-12,Donations,Refunds,Staff refund one donation or every donor of a campaign,1,Must,Staff,Not started
 D-13,Donations,Zamtel Kwacha,Third mobile money network,2,Should,Donors,Not started
@@ -95,7 +95,7 @@ O-11,Outreach and sharing,Website donate widget,Donate button organisations can 
 U-01,Updates and feed,Campaign updates,"Organiser posts text and photos (e.g. ""Surgery booked for Friday"")",1,Must,Organisers,Not started
 U-02,Updates and feed,Update notifications,"Donors and followers notified of each update by SMS (opt-in), push or email",1,Must,Donors,Not started
 U-03,Updates and feed,Thank-you messages,"Thank donors one by one or all at once, by SMS or WhatsApp template",1,Must,Organisers,Not started
-U-04,Updates and feed,Donor wall,Recent donors (or Anonymous) with amounts and messages,1,Must,Donors,Not started
+U-04,Updates and feed,Donor wall,Recent donors (or Anonymous) with amounts and messages,1,Must,Donors,Done
 U-05,Updates and feed,Words of support,Donors leave comments; moderated; organiser can hide them,1,Should,Donors,Not started
 U-06,Updates and feed,Follow a campaign,Get updates without donating,1,Should,Everyone,Not started
 U-07,Updates and feed,Home feed,"Updates from campaigns you gave to or follow, and from groups and organisations you follow",2,Should,Everyone,Not started

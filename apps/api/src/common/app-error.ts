@@ -54,6 +54,14 @@ export const Errors = {
       503,
       'We couldn’t send the text message just now. Please try again in a few minutes.',
     ),
+  validation: (fields: Record<string, string>) =>
+    new AppError('validation_failed', 400, 'Please check the highlighted fields.', { fields }),
+  idempotencyConflict: () =>
+    new AppError(
+      'idempotency_conflict',
+      409,
+      'This request was already used for something different. Please reload and try again.',
+    ),
   rateLimited: (retryAfter: number) =>
     new AppError('rate_limited', 429, 'Too many tries. Please wait a moment and try again.', {
       retryAfter,

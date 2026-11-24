@@ -24,6 +24,7 @@ describe('parseEnv', () => {
     MAIL_FROM_EMAIL: 'no-reply@fundizo.example',
     SMS_TRANSPORT: 'brevo',
     STORAGE_DRIVER: 's3',
+    PAYMENT_PROVIDER: 'zynle',
   };
 
   it('accepts complete production config', () => {
@@ -46,6 +47,17 @@ describe('parseEnv', () => {
 
   it('never stores photos on local disk in production', () => {
     expect(() => parseEnv({ ...production, STORAGE_DRIVER: 'local' })).toThrow(/STORAGE_DRIVER/);
+  });
+
+  it('never uses the pretend payment provider in production', () => {
+    expect(() => parseEnv({ ...production, PAYMENT_PROVIDER: 'fake' })).toThrow(/PAYMENT_PROVIDER/);
+  });
+
+  it('reads the payment status-check schedule', () => {
+    expect(parseEnv({}).PAYMENT_STATUS_CHECKS_MS).toEqual([
+      10_000, 30_000, 60_000, 120_000, 300_000,
+    ]);
+    expect(() => parseEnv({ PAYMENT_STATUS_CHECKS_MS: '10s' })).toThrow(/PAYMENT_STATUS_CHECKS_MS/);
   });
 
   it('refuses the dev secret in production', () => {

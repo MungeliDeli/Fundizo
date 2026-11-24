@@ -1,8 +1,16 @@
-import { CATEGORY_INFO, type PublicCampaign, formatKwacha, progressPercent } from '@fundizo/shared';
+import {
+  CATEGORY_INFO,
+  type PublicCampaign,
+  type PublicDonationsResponse,
+  formatKwacha,
+  progressPercent,
+} from '@fundizo/shared';
 import { Alert } from '@/components/ui/alert';
+import { ButtonLink } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { CampaignCover } from '../campaign-cover';
 import { PhotoImage } from '../photos/photo-image';
+import { DonorWall } from './donor-wall';
 import { ShareActions } from './share-actions';
 
 /**
@@ -12,9 +20,11 @@ import { ShareActions } from './share-actions';
  */
 export function CampaignPage({
   campaign: c,
+  donations,
   justPublished,
 }: {
   campaign: PublicCampaign;
+  donations: PublicDonationsResponse;
   justPublished: boolean;
 }) {
   const pct = progressPercent(c.raisedNgwee, c.goalNgwee);
@@ -52,24 +62,22 @@ export function CampaignPage({
         </div>
       ) : null}
       <p className="m-0 text-sm text-ink-2">
-        {c.donorCount === 0 ? 'Be one of the first to give.' : `${c.donorCount} donors`}
+        {donations.donorCount === 0
+          ? 'Be one of the first to give.'
+          : `${donations.donorCount} ${donations.donorCount === 1 ? 'donor' : 'donors'}`}
       </p>
-      <button
-        type="button"
-        disabled
-        className="h-13 w-full rounded-control bg-accent text-base font-semibold text-on-accent opacity-60"
-      >
-        Donations open soon
-      </button>
+      <ButtonLink href={`${path}/give`} size="lg" className="w-full">
+        Donate
+      </ButtonLink>
       <p className="m-0 -mt-2 text-center text-xs text-ink-3">
-        MTN MoMo and Airtel Money giving is on its way.
+        With MTN MoMo or Airtel Money. No account needed.
       </p>
       <ShareActions title={c.title} path={path} />
     </section>
   );
 
   return (
-    <div className="container-page flex flex-col gap-6 py-6 md:py-10">
+    <div className="container-page flex flex-col gap-6 pt-6 pb-28 md:pt-10 lg:pb-10">
       {justPublished ? (
         <Alert tone="success">
           <strong>Your fundraiser is live.</strong> Share it now with the people who know{' '}
@@ -167,12 +175,31 @@ export function CampaignPage({
             </section>
           ) : null}
 
+          <DonorWall donations={donations} />
+
           <p className="m-0 border-t border-line pt-4 text-sm text-ink-3">
             Started {published}. Every withdrawal will be shown on this page.
           </p>
         </article>
 
         <aside className="hidden lg:sticky lg:top-24 lg:block">{progress}</aside>
+      </div>
+
+      {/* Phones: Donate stays within thumb reach while reading the story (SPEC → donate). */}
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur lg:hidden">
+        <div className="mx-auto flex max-w-xl items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="display tabular m-0 text-lg leading-tight">
+              {formatKwacha(c.raisedNgwee)}
+            </p>
+            <p className="m-0 truncate text-xs text-ink-3">
+              {c.goalNgwee ? `of ${formatKwacha(c.goalNgwee)}` : 'raised'}
+            </p>
+          </div>
+          <ButtonLink href={`${path}/give`} size="lg" className="px-8">
+            Donate
+          </ButtonLink>
+        </div>
       </div>
     </div>
   );

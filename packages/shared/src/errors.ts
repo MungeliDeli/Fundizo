@@ -18,6 +18,8 @@ export const ErrorCode = z.enum([
   'bad_image',
   'too_many_photos',
   'not_found',
+  'idempotency_conflict',
+  'payment_in_progress',
   'internal_error',
 ]);
 export type ErrorCode = z.infer<typeof ErrorCode>;

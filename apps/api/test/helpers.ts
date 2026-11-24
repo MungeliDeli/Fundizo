@@ -37,7 +37,7 @@ export async function resetData() {
   // that wipes it, so triggers are switched off for this session only (needs the owner/superuser).
   await client.query(`set session_replication_role = replica`);
   await client.query(
-    'truncate users, sessions, one_time_tokens, user_identities, campaigns, campaign_beneficiaries, campaign_media, ledger_entries, ledger_transactions, ledger_accounts, outbox_events cascade',
+    'truncate users, sessions, one_time_tokens, user_identities, campaigns, campaign_beneficiaries, campaign_media, ledger_entries, ledger_transactions, ledger_accounts, outbox_events, payment_attempts, donations cascade',
   );
   await client.end();
   const redis = new Redis(redisUrl);

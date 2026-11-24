@@ -1,4 +1,9 @@
-import { OwnCampaignList, PublicCampaignResponse, formatKwacha } from '@fundizo/shared';
+import {
+  OwnCampaignList,
+  PublicCampaignResponse,
+  PublicDonationsResponse,
+  formatKwacha,
+} from '@fundizo/shared';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -64,5 +69,12 @@ export default async function FundraiserPage({ params, searchParams }: Props) {
     const mine = await serverGet('/campaigns/mine', OwnCampaignList);
     justPublished = Boolean(mine?.campaigns.some((c) => c.slug === slug));
   }
-  return <CampaignPage campaign={data.campaign} justPublished={justPublished} />;
+  const donations = (await serverGet(
+    `/public/campaigns/${encodeURIComponent(slug)}/donations`,
+    PublicDonationsResponse,
+    { auth: false },
+  )) ?? { donorCount: 0, donations: [] };
+  return (
+    <CampaignPage campaign={data.campaign} donations={donations} justPublished={justPublished} />
+  );
 }

@@ -196,8 +196,8 @@ export const PublicCampaign = z.object({
   category: CampaignCategory,
   story: Story,
   goalNgwee: Ngwee.nullable(),
+  /** Always derived from the ledger. The donor count lives with donations (PublicDonationsResponse). */
   raisedNgwee: Ngwee,
-  donorCount: z.number().int().nonnegative(),
   endDate: z.string().nullable(),
   province: z.string().nullable(),
   district: z.string().nullable(),

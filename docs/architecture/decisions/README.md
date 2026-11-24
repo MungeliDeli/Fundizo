@@ -23,4 +23,5 @@ An ADR records one significant decision: the context, what we chose, what we rej
 | [0004](0004-accounts-email-google-phone-later.md)                   | Accounts: email + password, Google; phone later; server-side sessions       | Accepted |
 | [0005](0005-photo-uploads-through-the-api.md)                       | Campaign photos uploaded through the API and re-encoded before storage      | Accepted |
 | [0006](0006-ledger-enforced-in-the-database-and-in-process-jobs.md) | Ledger enforced by the database; least-privilege app login; in-process jobs | Accepted |
+| [0007](0007-guest-donations-and-payment-attempts.md)                | Guest donations: payment attempts, status polling, access tokens, fee split | Accepted |
 | [0003](0003-slice-0-tooling.md)                                     | Slice 0 tooling: ESM, same-origin /api proxy, Drizzle module, linters       | Accepted |

@@ -11,6 +11,7 @@ import { DatabaseModule } from './infra/database/database.module.js';
 import { MailModule } from './infra/mail/mail.module.js';
 import { RedisModule } from './infra/redis/redis.module.js';
 import { SmsModule } from './infra/sms/sms.module.js';
+import { PaymentProviderModule } from './infra/payments/payments-provider.module.js';
 import { StorageModule } from './infra/storage/storage.module.js';
 import { JobsModule } from './jobs/jobs.module.js';
 import { CampaignsModule } from './modules/campaigns/campaigns.module.js';
@@ -19,6 +20,7 @@ import { HealthModule } from './modules/health/health.module.js';
 import { IdentityModule } from './modules/identity/identity.module.js';
 import { LedgerModule } from './modules/ledger/ledger.module.js';
 import { NotificationsModule } from './modules/notifications/notifications.module.js';
+import { PaymentsModule } from './modules/payments/payments.module.js';
 
 // Dev-only routes (/dev/outbox) are never registered in production.
 const devModules = process.env.NODE_ENV === 'production' ? [] : [DevModule];
@@ -43,6 +45,7 @@ const devModules = process.env.NODE_ENV === 'production' ? [] : [DevModule];
               '*.code',
               '*.msisdn',
               '*.phone',
+              '*.phoneE164',
               '*.password',
               'req.body',
               '*.token',
@@ -64,11 +67,13 @@ const devModules = process.env.NODE_ENV === 'production' ? [] : [DevModule];
     MailModule,
     SmsModule,
     StorageModule,
+    PaymentProviderModule,
     JobsModule,
     HealthModule,
     IdentityModule,
     LedgerModule,
     CampaignsModule,
+    PaymentsModule,
     NotificationsModule,
     ...devModules,
   ],
