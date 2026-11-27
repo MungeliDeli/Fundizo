@@ -6,6 +6,7 @@ import { ensureConnected } from '../redis/redis.module.js';
 import type {
   CallbackHeaders,
   CallbackHint,
+  CallbackRequest,
   CollectRequest,
   CollectResult,
   PaymentProvider,
@@ -142,7 +143,11 @@ export class FakeProvider implements PaymentProvider {
     return out;
   }
 
-  parseCallback(headers: CallbackHeaders, body: unknown): CallbackHint | null {
+  acknowledge(): unknown {
+    return { ok: true };
+  }
+
+  parseCallback({ headers, body }: CallbackRequest): CallbackHint | null {
     const parsed = CallbackBody.safeParse(body);
     const signature = headers['x-fake-signature'];
     if (!parsed.success || typeof signature !== 'string') return null;

@@ -60,8 +60,8 @@ D-02,Donations,Amount picker,"K50, K100, K200, K500 or a custom amount, with a m
 D-03,Donations,Optional tip,"Suggested tip to the platform, easy to set to zero; the platform's only revenue",1,Must,Donors,Done
 D-04,Donations,Cover the fees,Tick box showing the exact network fee; donor adds it on top,1,Should,Donors,Not started
 D-05,Donations,Network detection,MTN or Airtel logo appears from the number's prefix; number remembered on the device,1,Must,Donors,Done
-D-06,Donations,MTN MoMo collection,"USSD push payment prompt (sandbox first, live before launch)",1,Must,Donors,Not started
-D-07,Donations,Airtel Money collection,"USSD push payment prompt (sandbox first, live before launch)",1,Must,Donors,Not started
+D-06,Donations,MTN MoMo collection,"USSD push payment prompt (sandbox first, live before launch)",1,Must,Donors,In progress
+D-07,Donations,Airtel Money collection,"USSD push payment prompt (sandbox first, live before launch)",1,Must,Donors,In progress
 D-08,Donations,Waiting screen,"""Check your phone"" with live status, countdown and a resend option",1,Must,Donors,Done
 D-09,Donations,Payment confirmation,"Callback plus status polling; a ""not yet confirmed"" state; no double charges",1,Must,Donors,Done
 D-10,Donations,Anonymous giving and message,"Give anonymously or show a name, with an optional message of support",1,Must,Donors,Done

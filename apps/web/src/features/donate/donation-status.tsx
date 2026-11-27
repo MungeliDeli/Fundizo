@@ -2,6 +2,7 @@
 
 import {
   DEV_PAYMENT_OUTCOMES,
+  DevPaymentsResponse,
   DONATION_TOKEN_HEADER,
   DonationResponse,
   type DonationView,
@@ -350,7 +351,19 @@ const Ok = z.object({ ok: z.literal(true) });
 /** Development only: play the pretend network from the waiting screen. Not rendered in production. */
 function DevNetworkPanel({ donationId }: { donationId: string }) {
   const [msg, setMsg] = useState<string | null>(null);
-  if (process.env.NODE_ENV === 'production') return null;
+  // Only while the pretend network is in use (PAYMENT_PROVIDER=fake); never with ZynlePay.
+  const [isFake, setIsFake] = useState(false);
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') return;
+    let alive = true;
+    apiGet('/dev/payments', DevPaymentsResponse)
+      .then((r) => alive && setIsFake(r.provider === 'FAKE'))
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, []);
+  if (process.env.NODE_ENV === 'production' || !isFake) return null;
   return (
     <section
       className="flex flex-col gap-3 rounded-card border border-dashed border-ink-3 p-4"

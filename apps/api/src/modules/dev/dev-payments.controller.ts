@@ -60,6 +60,6 @@ export class DevPaymentsController {
     const callback = await this.provider.decide(reference, body.outcome);
     if (!callback)
       throw new AppError('payment_in_progress', 409, 'That request already has a final answer.');
-    await this.callbacks.receive(callback.headers, callback.body);
+    await this.callbacks.receive('fake', callback);
   }
 }

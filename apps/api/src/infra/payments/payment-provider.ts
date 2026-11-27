@@ -40,12 +40,23 @@ export interface CallbackHint {
 
 export type CallbackHeaders = Record<string, string | string[] | undefined>;
 
+/** Everything a callback request carries that an adapter may use to authenticate it. */
+export interface CallbackRequest {
+  headers: CallbackHeaders;
+  body: unknown;
+  /** The secret segment at the end of the callback URL (for providers that don't sign callbacks). */
+  pathToken?: string;
+}
+
 export interface PaymentProvider {
   readonly name: ProviderName;
   collect(req: CollectRequest): Promise<CollectResult>;
-  getCollectionStatus(reference: string): Promise<ProviderStatus>;
+  /** `amountNgwee` is what was requested, so adapters can work out the fee from a rate card. */
+  getCollectionStatus(reference: string, amountNgwee: number): Promise<ProviderStatus>;
   /** Authenticates the callback; null if it isn't genuine or isn't understood. */
-  parseCallback(headers: CallbackHeaders, body: unknown): CallbackHint | null;
+  parseCallback(req: CallbackRequest): CallbackHint | null;
+  /** What to answer a genuine callback with (each provider expects its own acknowledgement). */
+  acknowledge(hint: CallbackHint): unknown;
 }
 
 export const PAYMENT_PROVIDER = Symbol('PAYMENT_PROVIDER');

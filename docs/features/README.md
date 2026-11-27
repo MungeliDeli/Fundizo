@@ -12,13 +12,14 @@ Every feature we build gets a living doc here. It explains how the feature **act
 
 ## Index
 
-| Doc                                                   | Feature IDs                      | Status                        |
-| ----------------------------------------------------- | -------------------------------- | ----------------------------- |
-| [C-01 Create and publish](C-01-create-and-publish.md) | C-01 – C-04, C-06, C-07, O-02    | Shipped (payout step to come) |
-| [A-02 Profile and phone](A-02-profile-and-phone.md)   | A-02, A-13                       | Shipped                       |
-| [D-01 Donate](D-01-donate.md)                         | D-01–D-03, D-05, D-08–D-10, U-04 | Shipped (pretend provider)    |
-| [F-06 Ledger and jobs](F-06-ledger-and-jobs.md)       | F-06, F-09                       | Shipped                       |
-| [C-05 Photos](C-05-photos.md)                         | C-05, O-02                       | Shipped (S3 in slice 7)       |
-| [A-12 Continue with Google](A-12-google-signin.md)    | A-12                             | Shipped                       |
-| [A-01 Email sign-up and login](A-01-email-signup.md)  | A-01, A-03                       | Shipped                       |
-| [F-01 Skeleton](F-01-skeleton.md)                     | F-01, F-02 (CI), F-04 (local)    | Shipped                       |
+| Doc                                                   | Feature IDs                      | Status                                  |
+| ----------------------------------------------------- | -------------------------------- | --------------------------------------- |
+| [C-01 Create and publish](C-01-create-and-publish.md) | C-01 – C-04, C-06, C-07, O-02    | Shipped (payout step to come)           |
+| [A-02 Profile and phone](A-02-profile-and-phone.md)   | A-02, A-13                       | Shipped                                 |
+| [D-06 ZynlePay](D-06-zynlepay.md)                     | D-06, D-07                       | In progress (sandbox switch-on pending) |
+| [D-01 Donate](D-01-donate.md)                         | D-01–D-03, D-05, D-08–D-10, U-04 | Shipped (pretend provider)              |
+| [F-06 Ledger and jobs](F-06-ledger-and-jobs.md)       | F-06, F-09                       | Shipped                                 |
+| [C-05 Photos](C-05-photos.md)                         | C-05, O-02                       | Shipped (S3 in slice 7)                 |
+| [A-12 Continue with Google](A-12-google-signin.md)    | A-12                             | Shipped                                 |
+| [A-01 Email sign-up and login](A-01-email-signup.md)  | A-01, A-03                       | Shipped                                 |
+| [F-01 Skeleton](F-01-skeleton.md)                     | F-01, F-02 (CI), F-04 (local)    | Shipped                                 |

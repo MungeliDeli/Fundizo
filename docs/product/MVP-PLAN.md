@@ -40,8 +40,7 @@ The MVP is the **Phase 0 + Phase 1 "Must"** features from [FEATURES.md](features
 | 4 ✅ | **Photos** | C-05 | Upload a cover and up to 10 photos (through the API, [ADR 0005](../architecture/decisions/0005-photo-uploads-through-the-api.md); local disk now, S3 in slice 7), compressed on the phone, EXIF stripped, shown on the page and in link previews. |
 | 5 ✅ | **Ledger and background jobs** | F-06, F-09 | Append-only double-entry ledger (enforced in the DB), transactional outbox, BullMQ worker. Visible as: campaign totals are now calculated from the ledger, plus a passing property-test report. |
 | 6 ✅ | **Donate (fake provider)** | D-01, D-02, D-03, D-05, D-08, D-09, D-10, U-04 | Guest donates: amount, tip, number, name/anonymous, message → waiting screen → a dev "approve / decline / time out" panel plays the network → ledger entries → live total and donor wall. Idempotent, with no double charge. |
-| 7 | **Staging on AWS** | F-03, F-04, F-05 | The app deployed to a real staging URL, with secrets in Secrets Manager and error tracking. From here every merged slice deploys. |
-| 8 | **ZynlePay sandbox (MTN + Airtel)** | D-06, D-07 (via aggregator, [ADR 0002](../architecture/decisions/0002-mvp-providers-zynlepay-brevo-aws.md)) | The fake provider is replaced by a real `ZynlePayProvider` against Zynle's sandbox for MTN and Airtel numbers, with contract tests. *Needs Zynle sandbox credentials and docs.* |
+| 8 🟡 | **ZynlePay sandbox (MTN + Airtel)** | D-06, D-07 (via aggregator, [ADR 0002](../architecture/decisions/0002-mvp-providers-zynlepay-brevo-aws.md), [ADR 0008](../architecture/decisions/0008-zynlepay-adapter.md)) | A real `ZynleProvider` behind the same interface; the pretend network stays available. Built and tested against a scripted ZynlePay; switched on once the sandbox keys and ZynlePay's answers (amount units, test numbers) are in. |
 | 9 | **Messages and receipts** | N-02, N-04, D-11 | Central message templates; SMS and email receipts after each donation; optional email updates. (Brevo email is already live from slice 1; Brevo SMS from slice 3.) |
 | 10 | **Share** | O-01, O-02, O-03, O-04 | Share sheet, pre-written messages, reshare after donating. |
 | 11 | **Updates and thank-yous** | U-01, U-02, U-03 | Organiser posts updates; donors are notified; thank donors. |
@@ -51,6 +50,7 @@ The MVP is the **Phase 0 + Phase 1 "Must"** features from [FEATURES.md](features
 | 15 | **Withdrawals** | A-06, P-01, P-02, P-03, P-04, P-05, T-04 | Payout wallets (OTP + 48 h cool-off), available balance, request, staff approval, disbursement via ZynlePay sandbox, tracking. |
 | 16 | **Money integrity** | P-06, P-08, P-09, D-12, T-08 | Public money trail, float per network, daily reconciliation (payouts pause on gaps), refunds, finance reports. |
 | 17 | **Trust and lifecycle** | T-01, T-02, C-09, C-10, A-07 | Report a campaign, moderation queue, funeral template, pause/end/close, account recovery after a SIM change. |
+| 7 (before launch) | **Staging and production on AWS** | F-03, F-04, F-05 | Moved here on 2026-11-27: the owner wants free and pretend services until launch is near. Until then the app runs in the Codespace (share it by making port 3000 public). Then: deploy with secrets in Secrets Manager, error tracking, and every merged slice deploying. |
 
 Each row may split into smaller slices when we plan it. The order may change when the user decides.
 
@@ -62,8 +62,8 @@ Each row may split into smaller slices when we plan it. The order may change whe
 
 | Needed for | What |
 | --- | --- |
-| Slice 7 | AWS access for af-south-1 (an IAM Identity Center/SSO user for deploys; no root keys) and a billing alert |
 | Slice 8 | A ZynlePay sandbox account: API docs, sandbox credentials, test phone numbers for MTN and Airtel, and how callbacks are authenticated |
+| Before launch (slice 7) | AWS access for af-south-1 (an IAM Identity Center/SSO user; no root keys), a billing alert, a domain |
 | Slice 9 | A Brevo account (free plan) with a verified sender domain for email, plus a small SMS credit pack when we want real SMS |
 
 Direct MTN MoMo and Airtel Money integrations (F-07, F-08) are **not** part of the MVP; they can be added later as extra adapters.

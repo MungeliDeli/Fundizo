@@ -105,7 +105,7 @@ export class PaymentFlow implements OnModuleInit {
       .from(paymentAttempts)
       .where(eq(paymentAttempts.id, attemptId));
     if (!a || FINAL.has(a.status) || a.status === 'initiated') return;
-    const result = await this.provider.getCollectionStatus(attemptId);
+    const result = await this.provider.getCollectionStatus(attemptId, a.amountNgwee);
     await this.db
       .update(paymentAttempts)
       .set({ checkCount: sql`${paymentAttempts.checkCount} + 1`, lastCheckedAt: new Date() })

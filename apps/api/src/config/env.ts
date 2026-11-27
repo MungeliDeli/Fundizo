@@ -82,6 +82,32 @@ const EnvSchema = z
      * moves). 'zynle' = ZynlePay sandbox, arriving in slice 8. Production refuses 'fake'.
      */
     PAYMENT_PROVIDER: z.enum(['fake', 'zynle']).default('fake'),
+    /**
+     * ZynlePay (ADR 0002, slice 8). Required when PAYMENT_PROVIDER=zynle. Outside production only the
+     * sandbox host is allowed (CLAUDE.md: never call live payment endpoints from dev or CI).
+     */
+    ZYNLE_BASE_URL: z
+      .url({ protocol: /^https$/ })
+      .default('https://sandbox.zynlepay.com/zynlepay/jsonapi'),
+    /** Status-check endpoint; defaults to <ZYNLE_BASE_URL>/paymentstatus. */
+    ZYNLE_STATUS_URL: z.url({ protocol: /^https$/ }).optional(),
+    ZYNLE_MERCHANT_ID: z.string().min(1).max(64).optional(),
+    ZYNLE_API_ID: z.string().min(1).max(256).optional(),
+    ZYNLE_API_KEY: z.string().min(1).max(512).optional(),
+    /** Secret last segment of our callback URL: ZynlePay doesn't sign callbacks. */
+    ZYNLE_CALLBACK_TOKEN: z
+      .string()
+      .regex(/^[A-Za-z0-9_-]{24,128}$/)
+      .optional(),
+    /**
+     * What ZynlePay's integer `amount` means. Deliberately no default: guessing wrong charges 100×
+     * too much or too little. Confirm with ZynlePay, then set it.
+     */
+    ZYNLE_AMOUNT_UNIT: z.enum(['kwacha', 'ngwee']).optional(),
+    /** How phone numbers are sent: 'international' = 260971234567, 'local' = 0971234567. */
+    ZYNLE_PHONE_FORMAT: z.enum(['international', 'local']).default('international'),
+    /** Network fee from ZynlePay's rate card, in basis points (200 = 2%). Recorded in the ledger. */
+    ZYNLE_FEE_BASIS_POINTS: z.coerce.number().int().min(0).max(1_000).default(0),
     /** When to ask the provider for a payment's status, in ms after the prompt (money rule 8). */
     PAYMENT_STATUS_CHECKS_MS: z
       .string()
@@ -105,6 +131,31 @@ const EnvSchema = z
     path: ['SMS_TRANSPORT'],
     message: 'must be brevo in production',
   })
+  .refine(
+    (e) =>
+      e.PAYMENT_PROVIDER !== 'zynle' ||
+      Boolean(e.ZYNLE_MERCHANT_ID && e.ZYNLE_API_ID && e.ZYNLE_API_KEY && e.ZYNLE_CALLBACK_TOKEN),
+    {
+      path: ['ZYNLE_API_KEY'],
+      message:
+        'PAYMENT_PROVIDER=zynle needs ZYNLE_MERCHANT_ID, ZYNLE_API_ID, ZYNLE_API_KEY and ZYNLE_CALLBACK_TOKEN',
+    },
+  )
+  .refine((e) => e.PAYMENT_PROVIDER !== 'zynle' || e.ZYNLE_AMOUNT_UNIT, {
+    path: ['ZYNLE_AMOUNT_UNIT'],
+    message: 'set to kwacha or ngwee once ZynlePay confirms what `amount` means',
+  })
+  .refine(
+    (e) =>
+      e.NODE_ENV === 'production' ||
+      [e.ZYNLE_BASE_URL, e.ZYNLE_STATUS_URL].every(
+        (u) => !u || new URL(u).hostname === 'sandbox.zynlepay.com',
+      ),
+    {
+      path: ['ZYNLE_BASE_URL'],
+      message: 'only the ZynlePay sandbox is allowed outside production',
+    },
+  )
   .refine((e) => e.NODE_ENV !== 'production' || e.PAYMENT_PROVIDER !== 'fake', {
     path: ['PAYMENT_PROVIDER'],
     message: 'the fake provider is for development only',

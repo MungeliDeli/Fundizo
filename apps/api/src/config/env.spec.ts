@@ -25,6 +25,12 @@ describe('parseEnv', () => {
     SMS_TRANSPORT: 'brevo',
     STORAGE_DRIVER: 's3',
     PAYMENT_PROVIDER: 'zynle',
+    ZYNLE_BASE_URL: 'https://payments.zynlepay.com/zynlepay/jsonapi',
+    ZYNLE_MERCHANT_ID: 'm-1',
+    ZYNLE_API_ID: 'api-id',
+    ZYNLE_API_KEY: 'api-key',
+    ZYNLE_CALLBACK_TOKEN: 'cb-token-0123456789abcdef0123',
+    ZYNLE_AMOUNT_UNIT: 'kwacha',
   };
 
   it('accepts complete production config', () => {
@@ -51,6 +57,44 @@ describe('parseEnv', () => {
 
   it('never uses the pretend payment provider in production', () => {
     expect(() => parseEnv({ ...production, PAYMENT_PROVIDER: 'fake' })).toThrow(/PAYMENT_PROVIDER/);
+  });
+
+  describe('ZynlePay', () => {
+    const sandbox = {
+      PAYMENT_PROVIDER: 'zynle',
+      ZYNLE_MERCHANT_ID: 'm-1',
+      ZYNLE_API_ID: 'api-id',
+      ZYNLE_API_KEY: 'api-key',
+      ZYNLE_CALLBACK_TOKEN: 'cb-token-0123456789abcdef0123',
+      ZYNLE_AMOUNT_UNIT: 'kwacha',
+    };
+
+    it('works in development against the sandbox', () => {
+      expect(parseEnv(sandbox).ZYNLE_BASE_URL).toBe(
+        'https://sandbox.zynlepay.com/zynlepay/jsonapi',
+      );
+    });
+
+    it('needs every credential and the callback token', () => {
+      expect(() => parseEnv({ ...sandbox, ZYNLE_API_KEY: '' })).toThrow(/ZYNLE_API_KEY/);
+      expect(() => parseEnv({ ...sandbox, ZYNLE_CALLBACK_TOKEN: '' })).toThrow(/ZYNLE_API_KEY/);
+    });
+
+    it('refuses to guess what `amount` means', () => {
+      expect(() => parseEnv({ ...sandbox, ZYNLE_AMOUNT_UNIT: '' })).toThrow(/ZYNLE_AMOUNT_UNIT/);
+    });
+
+    it('never calls the live ZynlePay from dev or CI', () => {
+      expect(() =>
+        parseEnv({ ...sandbox, ZYNLE_BASE_URL: 'https://payments.zynlepay.com/zynlepay/jsonapi' }),
+      ).toThrow(/ZYNLE_BASE_URL/);
+      expect(() =>
+        parseEnv({
+          ...sandbox,
+          ZYNLE_STATUS_URL: 'https://payments.zynlepay.com/zynlepay/paymentstatus',
+        }),
+      ).toThrow(/ZYNLE_BASE_URL/);
+    });
   });
 
   it('reads the payment status-check schedule', () => {

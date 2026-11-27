@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { paymentAttempts } from '../../db/schema/index.js';
 import { DB, type Database } from '../../infra/database/database.module.js';
 import {
-  type CallbackHeaders,
+  type CallbackRequest,
   PAYMENT_PROVIDER,
   type PaymentProvider,
 } from '../../infra/payments/payment-provider.js';
@@ -23,18 +23,22 @@ export class PaymentCallbacks {
     private readonly flow: PaymentFlow,
   ) {}
 
-  /** Returns false when the callback isn't genuine. Unknown references are acknowledged and ignored. */
-  async receive(headers: CallbackHeaders, body: unknown): Promise<boolean> {
-    const hint = this.provider.parseCallback(headers, body);
+  /**
+   * Returns the provider's acknowledgement, or null when the callback isn't genuine (or is meant for
+   * another provider). Unknown references are acknowledged and ignored.
+   */
+  async receive(provider: string, req: CallbackRequest): Promise<unknown> {
+    const hint =
+      provider === this.provider.name.toLowerCase() ? this.provider.parseCallback(req) : null;
     if (!hint) {
-      this.log.warn('rejected a payment callback that failed authentication');
-      return false;
+      this.log.warn({ provider }, 'rejected a payment callback that failed authentication');
+      return null;
     }
     const [a] = await this.db
       .select({ id: paymentAttempts.id })
       .from(paymentAttempts)
       .where(eq(paymentAttempts.id, hint.reference));
     if (a) await this.flow.checkSoon(a.id);
-    return true;
+    return this.provider.acknowledge(hint);
   }
 }

@@ -76,8 +76,8 @@ Source of truth for what to build. IDs are stable: reference them in branches, c
 | D-03 | Optional tip | Suggested tip to the platform, easy to set to zero; the platform's only revenue | Must | Donors | Done |
 | D-04 | Cover the fees | Tick box showing the exact network fee; donor adds it on top | Should | Donors | Not started |
 | D-05 | Network detection | MTN or Airtel logo appears from the number's prefix; number remembered on the device | Must | Donors | Done |
-| D-06 | MTN MoMo collection | USSD push payment prompt (sandbox first, live before launch) | Must | Donors | Not started |
-| D-07 | Airtel Money collection | USSD push payment prompt (sandbox first, live before launch) | Must | Donors | Not started |
+| D-06 | MTN MoMo collection | USSD push payment prompt (sandbox first, live before launch) | Must | Donors | In progress |
+| D-07 | Airtel Money collection | USSD push payment prompt (sandbox first, live before launch) | Must | Donors | In progress |
 | D-08 | Waiting screen | "Check your phone" with live status, countdown and a resend option | Must | Donors | Done |
 | D-09 | Payment confirmation | Callback plus status polling; a "not yet confirmed" state; no double charges | Must | Donors | Done |
 | D-10 | Anonymous giving and message | Give anonymously or show a name, with an optional message of support | Must | Donors | Done |
